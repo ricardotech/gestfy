@@ -15,8 +15,11 @@ import Popover, {
   PopoverPlacement,
 } from "react-native-popover-view";
 import { Projects, Workspace, Add, Widgets, BottomTab } from "./components";
+import { useAuth } from "../../../contexts/Auth";
 
 export default function HomeScreen() {
+  const { signOut } = useAuth();
+
   const [refreshing, setRefreshing] = React.useState(false);
   const [popoverShown, setPopoverShown] = React.useState(false);
 
@@ -76,6 +79,14 @@ export default function HomeScreen() {
         }
       >
         <Widgets />
+        <TouchableOpacity
+          onPress={signOut}
+          style={{
+            height: 40,
+            width: 40,
+            backgroundColor: "red",
+          }}
+        />
       </ScrollView>
       <BottomTab
         activeTab={activeTab}
