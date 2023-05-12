@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 
 import React from "react";
 
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { theme, ThemeProvider } from "react-native-design-system";
 
@@ -19,6 +19,9 @@ import Loading from "./pages/Loading";
 import { WorkspacesProvider } from "./contexts/WorkspacesContext";
 
 export default function Index() {
+
+  LogBox.ignoreAllLogs();
+
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_400Regular,

@@ -1,21 +1,5 @@
-export type Cart = {
-  products?: Product[];
-  fee_percentage?: number;
-  fee_delivery?: number;
-  total_value?: number;
-};
-
-export type Product = {
-  id: number;
-  produto: string;
-  preco: number;
-  descricao: string;
-  img: string;
-  marca: string;
-  quantidade: number;
-  estoque: number;
-  favoritado?: boolean;
-};
+import { AxiosInstance } from "axios";
+import { ReactNode } from "react";
 
 export type Task = {
   description: string;
@@ -32,17 +16,56 @@ export type Task = {
 };
 
 export type Workspace = {
-  id: string;
+  // id: string;
   name: string;
-  description: string;
-  avatar: string;
-  members: User[];
+  // description: string;
+  // avatar: string;
+  // members: User[];
 };
 
 export type User = {
   id?: string;
-  name: string;
+  name?: string;
   email: string;
-  avatar?: string;
   role?: "admin" | "user";
+  avatar?: string;
+};
+
+export type Error = {
+  error: string;
+  status: string;
+};
+
+export type SignInCredentials = {
+  email: string;
+  password: string;
+};
+
+export type SignUpCredentials = {
+  name: string;
+  role: string;
+  email: string;
+  avatar: string;
+  password: string;
+};
+
+export type AuthContextData = {
+  user: User | undefined | null;
+  signIn: (credentials: SignInCredentials) => Promise<void>;
+  signUp: (credentials: SignUpCredentials) => Promise<void>;
+  signOut: () => Promise<void>;
+  isLoading: boolean;
+  token: string;
+  api: AxiosInstance;
+};
+
+export type AuthProviderProps = {
+  children: ReactNode;
+};
+
+export type Workspacee = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  updatedAt: string;
 };

@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { View, Text, Platform, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Platform,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import Popover, { PopoverPlacement } from "react-native-popover-view";
 
 export default function Workspace() {
+  const [popoverShown, setPopoverShown] = useState(false);
+
   return (
     <View
       style={{
@@ -25,16 +34,22 @@ export default function Workspace() {
         alignItems: "center",
       }}
     >
-      <View
+      <TouchableOpacity
+        onPress={() => setPopoverShown(!popoverShown)}
         style={{
           alignItems: "center",
           display: "flex",
           flexDirection: "row",
         }}
       >
-        <Avatar title="CV" rounded textStyle={{
-          fontSize: 16
-        }} />
+        <Avatar
+          title="CV"
+          rounded
+          textStyle={{
+            fontSize: 16,
+          }}
+        />
+
         <View
           style={{
             marginLeft: 10,
@@ -57,7 +72,7 @@ export default function Workspace() {
             Ricardo Fonseca
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <View
         style={{
           alignItems: "center",
@@ -73,6 +88,34 @@ export default function Workspace() {
           <Ionicons name="apps-outline" color="#EEE" size={20} />
         </Pressable>
       </View>
+      <Popover
+        popoverStyle={{
+          backgroundColor: "#202123",
+          height: 200,
+          width: 300,
+          borderRadius: 8,
+        }}
+        isVisible={popoverShown}
+        onRequestClose={() => setPopoverShown(false)}
+      >
+        <TouchableOpacity
+          style={{
+            padding: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#FFF",
+            }}
+          >
+            My Workspace
+          </Text>
+        </TouchableOpacity>
+      </Popover>
     </View>
   );
 }
