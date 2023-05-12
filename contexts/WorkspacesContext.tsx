@@ -5,6 +5,9 @@ type WorkspacesContextData = {
   tasks: Task[] | undefined | null;
   adicionarTask: (task: Task) => void;
   removerTask: (taskId: string) => void;
+
+  workspaces: Workspace[] | undefined | null;
+  adicionarWorkspaces: (workspace: Workspace) => void;
 };
 
 type WorkspacesProviderProps = {
@@ -21,6 +24,10 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     setTasks([...tasks, widget]);
   };
 
+  const adicionarWorkspaces = (widget: Workspace) => {
+    setWorkspaces([...workspaces, widget]);
+  };
+
   const removerTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
@@ -29,6 +36,8 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     <WidgetsContext.Provider
       value={{
         tasks,
+        workspaces,
+        adicionarWorkspaces,
         adicionarTask,
         removerTask,
       }}
