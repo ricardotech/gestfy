@@ -13,7 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
-import { useTasks } from "../../../../../contexts/WorkspacesContext";
+import { useControllers } from "../../../../../contexts/WorkspacesContext";
+import { useAuth } from "../../../../../contexts/Api";
 
 export default function AddWorkspace({
   activeTab,
@@ -28,7 +29,8 @@ export default function AddWorkspace({
   >;
   closeModal: () => void;
 }) {
-  const { adicionarTask } = useTasks();
+  const { adicionarWorkspace } = useControllers();
+  const { api } = useAuth();
 
   const navigation = useNavigation();
 
@@ -42,18 +44,14 @@ export default function AddWorkspace({
   function AddWorkspaceButton() {
     return (
       <Pressable
-        onPress={() => {
-          // adicionarTask({
-          //   description: description,
-          //   id: activeProject ? activeProject : activeTask,
-          //   type: activeProject ? "Project" : "Task",
-          //   priority: priority ? priority : "Low",
-          // });
-          closeModal();
-        }}
+        onPress={() =>
+          adicionarWorkspace({
+            name,
+          })
+        }
         style={{
           backgroundColor: name.length >= 5 ? "#3C7BFA" : "#333",
-          marginTop: 20,
+          marginTop: 10,
           height: 50,
           width: "100%",
           borderRadius: 10,

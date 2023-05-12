@@ -1,3 +1,6 @@
+import { AxiosInstance } from "axios";
+import { ReactNode } from "react";
+
 export type Cart = {
   products?: Product[];
   fee_percentage?: number;
@@ -32,17 +35,52 @@ export type Task = {
 };
 
 export type Workspace = {
-  id: string;
+  // id: string;
   name: string;
-  description: string;
-  avatar: string;
-  members: User[];
+  // description: string;
+  // avatar: string;
+  // members: User[];
 };
 
 export type User = {
   id?: string;
-  name: string;
+  name?: string;
+  username?: string;
   email: string;
-  avatar?: string;
-  role?: "admin" | "user";
+  thumbnail?: string;
+  role?: "membro" | "instructor";
+  description?: string;
+};
+
+export type Error = {
+  error: string;
+  status: string;
+};
+
+export type SignInCredentials = {
+  email: string;
+  password: string;
+};
+
+export type SignUpCredentials = {
+  name: string;
+  role: string;
+  username: string;
+  email: string;
+  thumbnail: string;
+  password: string;
+};
+
+export type AuthContextData = {
+  user: User | undefined | null;
+  signIn: (credentials: SignInCredentials) => Promise<void>;
+  signUp: (credentials: SignUpCredentials) => Promise<void>;
+  signOut: () => Promise<void>;
+  isLoading: boolean;
+  token: string;
+  api: AxiosInstance;
+};
+
+export type AuthProviderProps = {
+  children: ReactNode;
 };

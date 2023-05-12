@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
-import { useTasks } from "../../../../../contexts/WorkspacesContext";
+import { useControllers } from "../../../../../contexts/WorkspacesContext";
 
 export default function AddWidget({
   activeTab,
@@ -22,12 +22,13 @@ export default function AddWidget({
 }: {
   activeTab: "Select" | "Widget" | "Projeto" | "Squad" | "Workspace";
   setActiveTab: React.Dispatch<
-    React.SetStateAction<"Select" | "Widget" | "Projeto" | "Squad" | "Workspace">
+    React.SetStateAction<
+      "Select" | "Widget" | "Projeto" | "Squad" | "Workspace"
+    >
   >;
   closeModal: () => void;
 }) {
-  const { adicionarTask } = useTasks();
-  const {adicionarWorkspaces} = useTasks()
+  const { adicionarTask } = useControllers();
 
   const navigation = useNavigation();
 
@@ -169,7 +170,7 @@ export default function AddWidget({
             (activeTask && description.length > 5 && description.length < 15)
               ? "#3C7BFA"
               : "#333",
-          marginTop: 20,
+          marginTop: 10,
           height: 50,
           width: "100%",
           borderRadius: 10,

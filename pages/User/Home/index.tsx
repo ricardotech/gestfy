@@ -84,9 +84,6 @@ export default function HomeScreen() {
         handleStyle={{
           backgroundColor: "#494949",
         }}
-        modalStyle={{
-          backgroundColor: "transparent",
-        }}
         onClose={() => {
           setActiveTab("Home");
         }}
