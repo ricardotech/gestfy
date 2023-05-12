@@ -12,6 +12,7 @@ import HomeScreen from "../pages/User/Home";
 import { Avatar } from "react-native-design-system";
 import ProjectScreen from "../pages/User/Project";
 import Auth from "../pages/Auth";
+import SignIn from "../pages/Auth/SignIn";
 
 type StackNavigatorParamList = {
   Auth: {};
@@ -33,14 +34,10 @@ function Stack() {
         }}
       />
 
-      <AuthStack.Group
-        screenOptions={{
-          presentation: "modal",
-        }}
-      >
+      <AuthStack.Group screenOptions={{}}>
         <AuthStack.Screen
           name="SignIn"
-          component={Auth}
+          component={SignIn}
           options={{
             headerShown: false,
             title: "Project",
@@ -48,7 +45,7 @@ function Stack() {
         />
         <AuthStack.Screen
           name="SignUp"
-          component={Auth}
+          component={SignIn}
           options={{
             headerShown: false,
             title: "Project",

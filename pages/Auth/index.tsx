@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
 import {
@@ -9,6 +10,8 @@ import {
 } from "react-native";
 
 export default function Auth() {
+  const navigation = useNavigation();
+
   return (
     <ImageBackground
       source={{
@@ -77,6 +80,9 @@ export default function Auth() {
               }}
             >
               <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SignIn" as never);
+                }}
                 style={{
                   height: 45,
                   width: "49%",
@@ -97,6 +103,9 @@ export default function Auth() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SignUp" as never);
+                }}
                 style={{
                   height: 45,
                   width: "49%",
