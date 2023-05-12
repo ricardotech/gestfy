@@ -139,38 +139,36 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
 
-      await api
-        .post("/auth/signup", {
+      const res = await api
+        .post("/auth/register", {
           name,
           email,
           password,
         })
         .then((response: any) => {
-          console.log(response.data);
-
-          if (response.data.error) {
-            setError(response.data.error);
+          if (response.status === 203) {
+            return response.data;
           } else {
+            console.log(response.data)
             setTimeout(async () => {
-              AsyncStorage.setItem(TOKEN, response.data.data.token);
-              AsyncStorage.setItem(
-                USER,
-                JSON.stringify(response.data.data.user)
-              );
-              setToken(response.data.data.token);
+              AsyncStorage.setItem(TOKEN, response.data.token);
+              AsyncStorage.setItem(USER, JSON.stringify(response.data.user));
+              setToken(response.data.token);
               setUser({
-                id: response.data.data.user.id,
-                name: response.data.data.user.name,
-                email: response.data.data.user.email,
-                role: response.data.data.user.role,
+                id: response.data.user.id,
+                name: response.data.user.name,
+                email: response.data.user.email,
+                role: response.data.user.role,
               });
             }, 1000);
+            return "Usuário criado com sucesso!";
           }
         })
         .catch((error: any) => {
           setError(error);
         })
         .finally(() => setIsLoading(false));
+      return res;
     } catch (error: any) {
       console.log(error.message);
     }

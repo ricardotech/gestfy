@@ -41,9 +41,9 @@ export type SignInCredentials = {
 
 export type SignUpCredentials = {
   name: string;
-  role: string;
+  role?: string;
   email: string;
-  avatar: string;
+  avatar?: string;
   password: string;
 };
 

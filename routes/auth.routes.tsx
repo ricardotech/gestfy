@@ -13,6 +13,7 @@ import { Avatar } from "react-native-design-system";
 import ProjectScreen from "../pages/User/Project";
 import Auth from "../pages/Auth";
 import SignIn from "../pages/Auth/SignIn";
+import SignUp from "../pages/Auth/SignUp";
 
 type StackNavigatorParamList = {
   Auth: {};
@@ -45,7 +46,7 @@ function Stack() {
         />
         <AuthStack.Screen
           name="SignUp"
-          component={SignIn}
+          component={SignUp}
           options={{
             headerShown: false,
             title: "Project",
