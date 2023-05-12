@@ -20,18 +20,19 @@ export default function AddWidget({
   setActiveTab,
   closeModal,
 }: {
-  activeTab: "Select" | "Widget" | "Projeto" | "Squad";
+  activeTab: "Select" | "Widget" | "Projeto" | "Squad" | "Workspace";
   setActiveTab: React.Dispatch<
-    React.SetStateAction<"Select" | "Widget" | "Projeto" | "Squad">
+    React.SetStateAction<"Select" | "Widget" | "Projeto" | "Squad" | "Workspace">
   >;
   closeModal: () => void;
 }) {
   const { adicionarTask } = useTasks();
+  const {adicionarWorkspaces} = useTasks()
 
   const navigation = useNavigation();
 
   const [activeWidgetTab, setActiveWidgetTab] = React.useState<
-    "Widget" | "Projetos" | "Tarefas"
+    "Widget" | "Projetos" | "Tarefas" | "Workspaces"
   >("Widget");
 
   const [description, setDescription] = React.useState<string>("");

@@ -20,9 +20,9 @@ export default function AddSquad({
   setActiveTab,
   closeModal,
 }: {
-  activeTab: "Select" | "Widget" | "Projeto" | "Squad";
+  activeTab: "Select" | "Widget" | "Projeto" | "Squad"| "Workspace";
   setActiveTab: React.Dispatch<
-    React.SetStateAction<"Select" | "Widget" | "Projeto" | "Squad">
+    React.SetStateAction<"Select" | "Widget" | "Projeto" | "Squad"| "Workspace">
   >;
   closeModal: () => void;
 }) {
