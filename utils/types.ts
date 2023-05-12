@@ -1,25 +1,6 @@
 import { AxiosInstance } from "axios";
 import { ReactNode } from "react";
 
-export type Cart = {
-  products?: Product[];
-  fee_percentage?: number;
-  fee_delivery?: number;
-  total_value?: number;
-};
-
-export type Product = {
-  id: number;
-  produto: string;
-  preco: number;
-  descricao: string;
-  img: string;
-  marca: string;
-  quantidade: number;
-  estoque: number;
-  favoritado?: boolean;
-};
-
 export type Task = {
   description: string;
   type: "Project" | "Task";
@@ -45,11 +26,9 @@ export type Workspace = {
 export type User = {
   id?: string;
   name?: string;
-  username?: string;
   email: string;
-  thumbnail?: string;
-  role?: "membro" | "instructor";
-  description?: string;
+  role?: "admin" | "user";
+  avatar?: string;
 };
 
 export type Error = {
@@ -65,9 +44,8 @@ export type SignInCredentials = {
 export type SignUpCredentials = {
   name: string;
   role: string;
-  username: string;
   email: string;
-  thumbnail: string;
+  avatar: string;
   password: string;
 };
 

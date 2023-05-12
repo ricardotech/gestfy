@@ -109,8 +109,7 @@ function AuthProvider({ children }: AuthProviderProps) {
                 id: response.data.data.user.id,
                 email: response.data.data.user.email,
                 name: response.data.data.user.name,
-                username: response.data.data.username,
-                thumbnail: response.data.data.thumbnail,
+                avatar: response.data.data.avatar,
                 role: response.data.data.user.role,
               });
             }, 1250);
@@ -127,20 +126,14 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signUp({
-    name,
-    username,
-    thumbnail,
-    role,
-    email,
-    password,
-  }: SignUpCredentials) {
+  async function signUp({ name, email, password }: SignUpCredentials) {
     try {
       setIsLoading(true);
 
       await api
         .post("/auth/signup", {
-          username,
+          name,
+          email,
           password,
         })
         .then((response: any) => {
