@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import UserRoutes from "./user.routes";
+import AuthRoutes from "./auth.routes";
 import Loading from "../pages/Loading";
 
 export default function Routes() {
@@ -15,5 +16,5 @@ export default function Routes() {
 
   if (loading) return <Loading />;
 
-  return <UserRoutes />;
+  return <AuthRoutes />;
 }
