@@ -105,14 +105,6 @@ export default function Add({ closeModal }: { closeModal: () => void }) {
                 >
                   Projeto
                 </Text>
-                <Ionicons
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  name="file-tray"
-                  color="#FFF"
-                  size={20}
-                />
               </Pressable>
               <Pressable
                 onPress={() => {
@@ -142,46 +134,38 @@ export default function Add({ closeModal }: { closeModal: () => void }) {
                 >
                   Tarefa
                 </Text>
-                <Ionicons
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  name="square-outline"
-                  color="#FFF"
-                  size={20}
-                />
               </Pressable>
             </View>
             <Pressable
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  setTimeout(() => {
-                    setActiveTab("Workspace");
-                  }, 150);
-                }}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setTimeout(() => {
+                  setActiveTab("Workspace");
+                }, 150);
+              }}
+              style={{
+                height: 50,
+                width: "100%",
+                backgroundColor: "#333",
+                borderRadius: 10,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 20,
+                marginTop: 7,
+              }}
+            >
+              <Text
                 style={{
-                  height: 50,
-                  width: "49%",
-                  backgroundColor: "#333",
-                  borderRadius: 10,
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  paddingHorizontal: 20,
-                  marginTop: 7
+                  color: "#FFF",
+                  fontSize: 16,
+                  fontFamily: "Poppins_400Regular",
                 }}
               >
-                <Text
-                  style={{
-                    color: "#FFF",
-                    fontSize: 16,
-                    fontFamily: "Poppins_400Regular",
-                  }}
-                >
-                  Workspace
-                </Text>
-                {/* <Ionicons
+                Workspace
+              </Text>
+              {/* <Ionicons
                   style={{
                     marginLeft: 10,
                   }}
@@ -189,7 +173,7 @@ export default function Add({ closeModal }: { closeModal: () => void }) {
                   color="#FFF"
                   size={20}
                 /> */}
-              </Pressable>
+            </Pressable>
             {/* <Pressable
               style={{
                 height: 60,
