@@ -62,3 +62,10 @@ export type AuthContextData = {
 export type AuthProviderProps = {
   children: ReactNode;
 };
+
+export type Workspacee = {
+  _id: string;
+  createdAt: string;
+  name: string;
+  updatedAt: string;
+};

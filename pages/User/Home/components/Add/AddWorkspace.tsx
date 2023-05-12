@@ -44,11 +44,11 @@ export default function AddWorkspace({
   function AddWorkspaceButton() {
     return (
       <Pressable
-        onPress={() =>
+        onPress={() => {
           adicionarWorkspace({
             name,
-          })
-        }
+          });
+        }}
         style={{
           backgroundColor: name.length >= 5 ? "#3C7BFA" : "#333",
           marginTop: 10,

@@ -10,10 +10,15 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
 
+import Popover, {
+  PopoverMode,
+  PopoverPlacement,
+} from "react-native-popover-view";
 import { Projects, Workspace, Add, Widgets, BottomTab } from "./components";
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
+  const [popoverShown, setPopoverShown] = React.useState(false);
 
   const [activeTab, setActiveTab] = React.useState<"Home" | "Add">("Home");
 

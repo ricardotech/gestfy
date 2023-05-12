@@ -66,8 +66,8 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
   };
 
   const adicionarWorkspace = async (workspace: Workspace) => {
-    const res = await api.post("/workspaces", workspace).then(() => {
-      // salvar no context o response da API
+    api.post("/workspaces", workspace).then((res) => {
+      const workspace: Workspace = res.data;
       setWorkspaces([...workspaces, workspace]);
     });
   };
