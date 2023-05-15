@@ -43,6 +43,7 @@ export default function WorkspaceList({
       {workspaces?.map((workspace, i) => {
         return (
           <TouchableOpacity
+            key={i}
             onPress={() => {
               setActiveWorkspace(workspace);
               setPopoverShown(false);

@@ -28,6 +28,7 @@ type WorkspacesProviderProps = {
 
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
+export const ACTIVEWORKSPACE = "@Controller:activeworkspace";
 
 export const WidgetsContext = createContext({} as WorkspacesContextData);
 
@@ -37,11 +38,13 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const api = axios.create();
-  const API_URL = "https://8c49-177-75-60-188.ngrok-free.app";
+  const API_URL = "http://localhost:3000";
   api.defaults.baseURL = API_URL;
 
   useEffect(() => {
-    getWorkspaces();
+    getWorkspaces().then((workspaces) => {
+      getActiveWorkspace(workspaces);
+    });
   }, []);
 
   async function handleApi() {
@@ -69,6 +72,7 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
   };
 
   const setActiveWorkspace = async (workspace: Workspace) => {
+    await AsyncStorage.setItem(ACTIVEWORKSPACE, workspace.name);
     setActiveWorkspaceState(workspace);
   };
 
@@ -83,7 +87,22 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     await handleApi();
     const res = await api.get("/workspaces");
     setWorkspaces(res.data);
-    setActiveWorkspaceState(res.data[0]);
+
+    return res.data;
+  };
+
+  const getActiveWorkspace = async (workspaces: Workspace[]) => {
+    const workspaceName = await AsyncStorage.getItem(ACTIVEWORKSPACE);
+
+    if (workspaceName) {
+      const workspace = workspaces.filter(
+        (workspace) => workspace.name === workspaceName
+      );
+
+      setActiveWorkspace(workspace[0]);
+    } else {
+      setActiveWorkspace(workspaces[0]);
+    }
   };
 
   const removerTask = (taskId: string) => {

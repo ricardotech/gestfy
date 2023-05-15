@@ -83,14 +83,7 @@ export default function HomeScreen() {
         }
       >
         <Widgets />
-        <Text
-          style={{
-            color: "#FFF",
-          }}
-        >
-          {JSON.stringify(user)}
-        </Text>
-
+        <Projects />
         <TouchableOpacity
           onPress={signOut}
           style={{

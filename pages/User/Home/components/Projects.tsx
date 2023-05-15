@@ -97,7 +97,7 @@ export default function Projects() {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: 20,
+          paddingHorizontal: 20,
         }}
       >
         <Text
@@ -123,6 +123,7 @@ export default function Projects() {
       </View>
       <View
         style={{
+          marginTop: 10,
           height: 150,
         }}
       >
