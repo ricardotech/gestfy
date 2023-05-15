@@ -11,8 +11,10 @@ import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
-import { useAuth } from "../../../../contexts/Auth";
-import { useControllers } from "../../../../contexts/Controllers";
+import { useAuth } from "../../../../../contexts/Auth";
+import { useControllers } from "../../../../../contexts/Controllers";
+import WorkspaceList from "./WorkspaceList";
+import WorkspaceAdd from "./WorkspaceAdd";
 
 export default function Workspace() {
   const { user, api } = useAuth();
@@ -21,6 +23,8 @@ export default function Workspace() {
   const [popoverShown, setPopoverShown] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [tab, setTab] = useState<"list" | "add">("list");
 
   return (
     <View
@@ -50,14 +54,18 @@ export default function Workspace() {
         }}
       >
         <Avatar
-          title="CV"
+          title={
+            activeWorkspace
+              ? activeWorkspace.name[0] + activeWorkspace.name[1]
+              : ""
+          }
           rounded
           style={{
-            backgroundColor: "#3E6FBC"
+            backgroundColor: "#3E6FBC",
           }}
           textStyle={{
             fontSize: 16,
-            color: "#FFF"
+            color: "#FFF",
           }}
         />
 
@@ -100,74 +108,36 @@ export default function Workspace() {
         </Pressable>
       </View>
       <Popover
+        backgroundStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+        }}
         popoverStyle={{
           backgroundColor: "#202123",
           width: 300,
           borderRadius: 8,
         }}
         isVisible={popoverShown}
-        onRequestClose={() => setPopoverShown(false)}
+        onRequestClose={() => {
+          setPopoverShown(false);
+          setTimeout(() => {
+            setTab("list");
+          }, 400);
+        }}
       >
-        <Text
-          style={{
-            color: "#FFF",
-            fontSize: 18,
-            marginTop: 20,
-            marginBottom: 10,
-            marginHorizontal: 20,
-            fontWeight: "bold",
-          }}
-        >
-          Escolher workspace
-        </Text>
-        {workspaces?.map((workspace, i) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                setActiveWorkspace(workspace);
-                setPopoverShown(false);
-              }}
-              style={{
-                padding: 20,
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Avatar
-                  title={workspace.name[0] + workspace.name[1]}
-                  rounded
-                  style={{
-                    backgroundColor:
-                      activeWorkspace === workspace ? "#3E6FBC" : "#EEE",
-                  }}
-                  textStyle={{
-                    fontSize: 16,
-                    color: activeWorkspace === workspace ? "#FFF" : "#333",
-                  }}
-                />
-                <Text
-                  style={{
-                    color: activeWorkspace === workspace ? "#3E6FBC" : "#FFF",
-                    fontWeight:
-                      activeWorkspace === workspace ? "bold" : "normal",
-                    marginLeft: 10,
-                  }}
-                >
-                  {workspace.name}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+        {tab === "list" && (
+          <WorkspaceList
+            tab={tab}
+            setTab={setTab}
+            setPopoverShown={setPopoverShown}
+          />
+        )}
+        {tab === "add" && (
+          <WorkspaceAdd
+            tab={tab}
+            setTab={setTab}
+            setPopoverShown={setPopoverShown}
+          />
+        )}
       </Popover>
     </View>
   );
