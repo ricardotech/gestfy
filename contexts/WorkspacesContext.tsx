@@ -6,10 +6,10 @@ import React, {
   useEffect,
 } from "react";
 import { Task, Workspace } from "../utils/types";
-import { useAuth } from "./Api";
+import { useAuth } from "./Auth";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signOut } from "./Api";
+import { signOut } from "./Auth";
 
 type WorkspacesContextData = {
   tasks: Task[] | undefined | null;

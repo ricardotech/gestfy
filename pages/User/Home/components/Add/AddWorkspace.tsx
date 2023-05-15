@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
 import { useControllers } from "../../../../../contexts/WorkspacesContext";
-import { useAuth } from "../../../../../contexts/Api";
+import { useAuth } from "../../../../../contexts/Auth";
 
 export default function AddWorkspace({
   activeTab,

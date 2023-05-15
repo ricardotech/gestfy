@@ -16,11 +16,9 @@ export type Task = {
 };
 
 export type Workspace = {
-  // id: string;
+  _id?: string;
   name: string;
-  // description: string;
-  // avatar: string;
-  // members: User[];
+  //   creatorId: string;
 };
 
 export type User = {
@@ -43,15 +41,15 @@ export type SignInCredentials = {
 
 export type SignUpCredentials = {
   name: string;
-  role: string;
+  role?: string;
   email: string;
-  avatar: string;
+  avatar?: string;
   password: string;
 };
 
 export type AuthContextData = {
   user: User | undefined | null;
-  signIn: (credentials: SignInCredentials) => Promise<void>;
+  signIn: (credentials: SignInCredentials) => Promise<void | "Usuário autenticado com sucesso!" | "Email ou senha inválidos" | "Email inválido" | "Insira uma senha válida">;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   isLoading: boolean;
@@ -61,11 +59,4 @@ export type AuthContextData = {
 
 export type AuthProviderProps = {
   children: ReactNode;
-};
-
-export type Workspacee = {
-  _id: string;
-  createdAt: string;
-  name: string;
-  updatedAt: string;
 };

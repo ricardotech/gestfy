@@ -15,6 +15,7 @@ import {
   SignUpCredentials,
   User,
 } from "../utils/types";
+import validator from "email-validator";
 
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
@@ -89,30 +90,37 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
 
-      await api
-        .post("/auth/signin", {
+      if (!validator.validate(email)) {
+        return "Email inválido";
+      }
+
+      if (password.length < 8) {
+        return "Insira uma senha válida";
+      }
+
+      const res = await api
+        .post("/auth/login", {
           email: email,
           password,
         })
         .then((response: any) => {
-          if (response.data.error) {
-            setError(response.data.error);
+          if (response.status === 203) {
+            return "Email ou senha inválidos";
           } else {
             setTimeout(async () => {
-              await AsyncStorage.setItem(TOKEN, response.data.data.token);
+              await AsyncStorage.setItem(TOKEN, response.data.token);
               await AsyncStorage.setItem(
                 USER,
-                JSON.stringify(response.data.data.user)
+                JSON.stringify(response.data.user)
               );
-              setToken(response.data.data.token);
+              setToken(response.data.token);
               setUser({
-                id: response.data.data.user.id,
-                email: response.data.data.user.email,
-                name: response.data.data.user.name,
-                avatar: response.data.data.avatar,
-                role: response.data.data.user.role,
+                id: response.data.user.id,
+                email: response.data.user.email,
+                role: response.data.user.role,
               });
             }, 1250);
+            return "Usuário autenticado com sucesso!";
           }
         })
         .catch((error: any) => {
@@ -121,6 +129,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         .finally(() => {
           setIsLoading(false);
         });
+      return res;
     } catch (error: any) {
       console.log(error.message);
     }
@@ -130,38 +139,36 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
 
-      await api
-        .post("/auth/signup", {
+      const res = await api
+        .post("/auth/register", {
           name,
           email,
           password,
         })
         .then((response: any) => {
-          console.log(response.data);
-
-          if (response.data.error) {
-            setError(response.data.error);
+          if (response.status === 203) {
+            return response.data;
           } else {
+            console.log(response.data)
             setTimeout(async () => {
-              AsyncStorage.setItem(TOKEN, response.data.data.token);
-              AsyncStorage.setItem(
-                USER,
-                JSON.stringify(response.data.data.user)
-              );
-              setToken(response.data.data.token);
+              AsyncStorage.setItem(TOKEN, response.data.token);
+              AsyncStorage.setItem(USER, JSON.stringify(response.data.user));
+              setToken(response.data.token);
               setUser({
-                id: response.data.data.user.id,
-                name: response.data.data.user.name,
-                email: response.data.data.user.email,
-                role: response.data.data.user.role,
+                id: response.data.user.id,
+                name: response.data.user.name,
+                email: response.data.user.email,
+                role: response.data.user.role,
               });
             }, 1000);
+            return "Usuário criado com sucesso!";
           }
         })
         .catch((error: any) => {
           setError(error);
         })
         .finally(() => setIsLoading(false));
+      return res;
     } catch (error: any) {
       console.log(error.message);
     }

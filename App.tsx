@@ -17,9 +17,9 @@ import {
 import Routes from "./routes";
 import Loading from "./pages/Loading";
 import { WorkspacesProvider } from "./contexts/WorkspacesContext";
+import { AuthProvider } from "./contexts/Auth";
 
 export default function Index() {
-
   LogBox.ignoreAllLogs();
 
   const [fontsLoaded] = useFonts({
@@ -46,9 +46,11 @@ export default function Index() {
       >
         <NavigationContainer>
           <StatusBar barStyle="light-content" />
-            <WorkspacesProvider>
+          <WorkspacesProvider>
+            <AuthProvider>
               <Routes />
-            </WorkspacesProvider>
+            </AuthProvider>
+          </WorkspacesProvider>
         </NavigationContainer>
       </View>
     </ThemeProvider>
