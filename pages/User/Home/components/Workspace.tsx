@@ -12,11 +12,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
 import { useAuth } from "../../../../contexts/Auth";
-import { useControllers } from "../../../../contexts/WorkspacesContext";
+import { useControllers } from "../../../../contexts/Controllers";
 
 export default function Workspace() {
   const { user, api } = useAuth();
-  const { workspaces } = useControllers();
+  const { workspaces, activeWorkspace, setActiveWorkspace } = useControllers();
 
   const [popoverShown, setPopoverShown] = useState(false);
 
@@ -52,8 +52,12 @@ export default function Workspace() {
         <Avatar
           title="CV"
           rounded
+          style={{
+            backgroundColor: "#3E6FBC"
+          }}
           textStyle={{
             fontSize: 16,
+            color: "#FFF"
           }}
         />
 
@@ -69,7 +73,7 @@ export default function Workspace() {
               fontFamily: "Poppins_700Bold",
             }}
           >
-            AgencyPro
+            {activeWorkspace?.name}
           </Text>
           <Text
             style={{
@@ -111,7 +115,7 @@ export default function Workspace() {
             marginTop: 20,
             marginBottom: 10,
             marginHorizontal: 20,
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         >
           Escolher workspace
@@ -119,6 +123,10 @@ export default function Workspace() {
         {workspaces?.map((workspace, i) => {
           return (
             <TouchableOpacity
+              onPress={() => {
+                setActiveWorkspace(workspace);
+                setPopoverShown(false);
+              }}
               style={{
                 padding: 20,
                 display: "flex",
@@ -137,13 +145,20 @@ export default function Workspace() {
                 <Avatar
                   title={workspace.name[0] + workspace.name[1]}
                   rounded
+                  style={{
+                    backgroundColor:
+                      activeWorkspace === workspace ? "#3E6FBC" : "#EEE",
+                  }}
                   textStyle={{
                     fontSize: 16,
+                    color: activeWorkspace === workspace ? "#FFF" : "#333",
                   }}
                 />
                 <Text
                   style={{
-                    color: "#FFF",
+                    color: activeWorkspace === workspace ? "#3E6FBC" : "#FFF",
+                    fontWeight:
+                      activeWorkspace === workspace ? "bold" : "normal",
                     marginLeft: 10,
                   }}
                 >

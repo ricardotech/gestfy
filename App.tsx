@@ -16,7 +16,7 @@ import {
 
 import Routes from "./routes";
 import Loading from "./pages/Loading";
-import { WorkspacesProvider } from "./contexts/WorkspacesContext";
+import { WorkspacesProvider } from "./contexts/Controllers";
 import { AuthProvider } from "./contexts/Auth";
 
 export default function Index() {

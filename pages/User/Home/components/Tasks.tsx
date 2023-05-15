@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { HorizontalScroll } from "../../../../components/Listing";
 import { useNavigation } from "@react-navigation/native";
 import { Avatar } from "react-native-design-system";
-import { useControllers } from "../../../../contexts/WorkspacesContext";
+import { useControllers } from "../../../../contexts/Controllers";
 import { Task } from "../../../../utils/types";
 
 import { Ionicons } from "@expo/vector-icons";

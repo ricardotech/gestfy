@@ -17,6 +17,8 @@ type WorkspacesContextData = {
   removerTask: (taskId: string) => void;
 
   workspaces: Workspace[] | undefined | null;
+  activeWorkspace: Workspace | undefined | null;
+  setActiveWorkspace: (workspace: Workspace) => void;
   adicionarWorkspace: (workspace: Workspace) => void;
 };
 
@@ -31,15 +33,16 @@ export const WidgetsContext = createContext({} as WorkspacesContextData);
 
 function WorkspacesProvider({ children }: WorkspacesProviderProps) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const api = axios.create();
-  const API_URL = "http://localhost:3000";
+  const API_URL = "https://8c49-177-75-60-188.ngrok-free.app";
   api.defaults.baseURL = API_URL;
 
   useEffect(() => {
     getWorkspaces();
-  }, [])
+  }, []);
 
   async function handleApi() {
     const storaged_token = await AsyncStorage.getItem(TOKEN);
@@ -65,6 +68,10 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     setTasks([...tasks, widget]);
   };
 
+  const setActiveWorkspace = async (workspace: Workspace) => {
+    setActiveWorkspaceState(workspace);
+  };
+
   const adicionarWorkspace = async (workspace: Workspace) => {
     await handleApi();
     api.post("/workspaces", workspace).then((res) => {
@@ -76,6 +83,7 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     await handleApi();
     const res = await api.get("/workspaces");
     setWorkspaces(res.data);
+    setActiveWorkspaceState(res.data[0]);
   };
 
   const removerTask = (taskId: string) => {
@@ -90,6 +98,8 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
         adicionarWorkspace,
         adicionarTask,
         removerTask,
+        activeWorkspace,
+        setActiveWorkspace,
       }}
     >
       {children}

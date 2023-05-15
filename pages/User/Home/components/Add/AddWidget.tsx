@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
-import { useControllers } from "../../../../../contexts/WorkspacesContext";
+import { useControllers } from "../../../../../contexts/Controllers";
 
 export default function AddWidget({
   activeTab,

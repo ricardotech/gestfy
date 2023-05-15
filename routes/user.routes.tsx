@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../pages/User/Home";
 import { Avatar } from "react-native-design-system";
 import ProjectScreen from "../pages/User/Project";
+import Onboarding from "../pages/User/Onboarding";
 
 type TabNavigatorParamList = {
   EventListView: { icon: string };
