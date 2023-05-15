@@ -136,44 +136,6 @@ export default function Add({ closeModal }: { closeModal: () => void }) {
                 </Text>
               </Pressable>
             </View>
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setTimeout(() => {
-                  setActiveTab("Workspace");
-                }, 150);
-              }}
-              style={{
-                height: 50,
-                width: "100%",
-                backgroundColor: "#333",
-                borderRadius: 10,
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                paddingHorizontal: 20,
-                marginTop: 7,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#FFF",
-                  fontSize: 16,
-                  fontFamily: "Poppins_400Regular",
-                }}
-              >
-                Workspace
-              </Text>
-              {/* <Ionicons
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  name="square-outline"
-                  color="#FFF"
-                  size={20}
-                /> */}
-            </Pressable>
             {/* <Pressable
               style={{
                 height: 60,
@@ -209,13 +171,6 @@ export default function Add({ closeModal }: { closeModal: () => void }) {
       )}
       {activeTab === "Squad" && (
         <AddSquad
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          closeModal={closeModal}
-        />
-      )}
-      {activeTab === "Workspace" && (
-        <AddWorkspace
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           closeModal={closeModal}
