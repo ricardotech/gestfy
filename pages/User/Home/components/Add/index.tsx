@@ -13,7 +13,6 @@ import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
 import AddWidget from "./AddWidget";
 import AddSquad from "./AddSquad";
-import AddWorkspace from "./AddWorkspace";
 
 export default function Add({ closeModal }: { closeModal: () => void }) {
   const [activeTab, setActiveTab] = React.useState<
