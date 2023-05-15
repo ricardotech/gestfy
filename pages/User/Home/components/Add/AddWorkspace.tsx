@@ -43,11 +43,12 @@ export default function AddWorkspace({
 
   function AddWorkspaceButton() {
     return (
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           adicionarWorkspace({
             name,
-          });
+          })
+          closeModal();
         }}
         style={{
           backgroundColor: name.length >= 5 ? "#3C7BFA" : "#333",
@@ -70,7 +71,7 @@ export default function AddWorkspace({
         >
           Adicionar workspace
         </Text>
-      </Pressable>
+      </TouchableOpacity>
     );
   }
 

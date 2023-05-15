@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -11,9 +11,16 @@ import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import { useAuth } from "../../../../contexts/Auth";
+import { useControllers } from "../../../../contexts/WorkspacesContext";
 
 export default function Workspace() {
+  const { user, api } = useAuth();
+  const { workspaces } = useControllers();
+
   const [popoverShown, setPopoverShown] = useState(false);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <View
@@ -69,7 +76,7 @@ export default function Workspace() {
               color: "#EEE",
             }}
           >
-            Ricardo Fonseca
+            {user?.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -91,30 +98,61 @@ export default function Workspace() {
       <Popover
         popoverStyle={{
           backgroundColor: "#202123",
-          height: 200,
           width: 300,
           borderRadius: 8,
         }}
         isVisible={popoverShown}
         onRequestClose={() => setPopoverShown(false)}
       >
-        <TouchableOpacity
+        <Text
           style={{
-            padding: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            color: "#FFF",
+            fontSize: 18,
+            marginTop: 20,
+            marginBottom: 10,
+            marginHorizontal: 20,
+            fontWeight: "bold"
           }}
         >
-          <Text
-            style={{
-              color: "#FFF",
-            }}
-          >
-            My Workspace
-          </Text>
-        </TouchableOpacity>
+          Escolher workspace
+        </Text>
+        {workspaces?.map((workspace, i) => {
+          return (
+            <TouchableOpacity
+              style={{
+                padding: 20,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar
+                  title={workspace.name[0] + workspace.name[1]}
+                  rounded
+                  textStyle={{
+                    fontSize: 16,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: "#FFF",
+                    marginLeft: 10,
+                  }}
+                >
+                  {workspace.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </Popover>
     </View>
   );

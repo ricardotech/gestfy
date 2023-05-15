@@ -22,7 +22,7 @@ export type Workspace = {
 };
 
 export type User = {
-  id?: string;
+  _id?: string;
   name?: string;
   email: string;
   role?: "admin" | "user";

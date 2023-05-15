@@ -37,6 +37,10 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
   const API_URL = "http://localhost:3000";
   api.defaults.baseURL = API_URL;
 
+  useEffect(() => {
+    getWorkspaces();
+  }, [])
+
   async function handleApi() {
     const storaged_token = await AsyncStorage.getItem(TOKEN);
 
@@ -57,19 +61,21 @@ function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     );
   }
 
-  useEffect(() => {
-    handleApi();
-  }, []);
-
   const adicionarTask = (widget: Task) => {
     setTasks([...tasks, widget]);
   };
 
   const adicionarWorkspace = async (workspace: Workspace) => {
+    await handleApi();
     api.post("/workspaces", workspace).then((res) => {
-      const workspace: Workspace = res.data;
-      setWorkspaces([...workspaces, workspace]);
+      getWorkspaces();
     });
+  };
+
+  const getWorkspaces = async () => {
+    await handleApi();
+    const res = await api.get("/workspaces");
+    setWorkspaces(res.data);
   };
 
   const removerTask = (taskId: string) => {

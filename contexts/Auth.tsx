@@ -28,7 +28,7 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL = "http://localhost:3000";
+const API_URL = "https://96d6-189-28-13-91.ngrok-free.app";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {
@@ -115,9 +115,10 @@ function AuthProvider({ children }: AuthProviderProps) {
               );
               setToken(response.data.token);
               setUser({
-                id: response.data.user.id,
+                _id: response.data.user._id,
                 email: response.data.user.email,
                 role: response.data.user.role,
+                name: response.data.user.name,
               });
             }, 1250);
             return "Usuário autenticado com sucesso!";
@@ -149,13 +150,12 @@ function AuthProvider({ children }: AuthProviderProps) {
           if (response.status === 203) {
             return response.data;
           } else {
-            console.log(response.data)
             setTimeout(async () => {
               AsyncStorage.setItem(TOKEN, response.data.token);
               AsyncStorage.setItem(USER, JSON.stringify(response.data.user));
               setToken(response.data.token);
               setUser({
-                id: response.data.user.id,
+                _id: response.data.user._id,
                 name: response.data.user.name,
                 email: response.data.user.email,
                 role: response.data.user.role,

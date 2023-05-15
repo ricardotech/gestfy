@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   View,
@@ -15,15 +15,19 @@ import Popover, {
   PopoverPlacement,
 } from "react-native-popover-view";
 import { Projects, Workspace, Add, Widgets, BottomTab } from "./components";
-import { useAuth } from "../../../contexts/Auth";
+import { handleApi, useAuth } from "../../../contexts/Auth";
 
 export default function HomeScreen() {
-  const { signOut } = useAuth();
+  const { user, api, signOut } = useAuth();
 
   const [refreshing, setRefreshing] = React.useState(false);
   const [popoverShown, setPopoverShown] = React.useState(false);
 
   const [activeTab, setActiveTab] = React.useState<"Home" | "Add">("Home");
+
+  useEffect(() => {
+    handleApi();
+  }, []);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -79,6 +83,14 @@ export default function HomeScreen() {
         }
       >
         <Widgets />
+        <Text
+          style={{
+            color: "#FFF",
+          }}
+        >
+          {JSON.stringify(user)}
+        </Text>
+
         <TouchableOpacity
           onPress={signOut}
           style={{
