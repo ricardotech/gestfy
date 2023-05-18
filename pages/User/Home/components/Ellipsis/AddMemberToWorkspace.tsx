@@ -1,47 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
-import {
-  View,
-  Text,
-  Platform,
-  Pressable,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { Avatar } from "react-native-design-system";
-import { Ionicons } from "@expo/vector-icons";
-import * as Haptics from "expo-haptics";
-import Popover, { PopoverPlacement } from "react-native-popover-view";
+import validator from "email-validator";
 import { useServices } from "../../../../../contexts/Services";
 
-export default function WorkspaceAdd({
-  tab,
+export default function AddMemberToWorkspace({
   setTab,
-  setPopoverShown,
 }: {
-  tab: "list" | "add";
-  setTab: any;
-  setPopoverShown: React.Dispatch<React.SetStateAction<boolean>>;
+  setTab: React.Dispatch<React.SetStateAction<"list" | "addMemberToWorkspace">>;
 }) {
-  const {
-    user,
-    api,
-    adicionarWorkspace,
-    workspaces,
-    activeWorkspace,
-    setActiveWorkspace,
-  } = useServices();
+  const [email, setEmail] = React.useState("");
 
-  const [name, setName] = useState<string>("");
+  const { activeWorkspace } = useServices();
 
   return (
-    <>
+    <View>
       <View
         style={{
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          padding: 20,
+          paddingHorizontal: 20,
         }}
       >
         <TouchableOpacity
@@ -58,32 +38,44 @@ export default function WorkspaceAdd({
         >
           <Ionicons name="chevron-back" color="#FFF" size={20} />
         </TouchableOpacity>
-        <Text
-          style={{
-            color: "#FFF",
-            fontSize: 18,
-            marginHorizontal: 20,
-            fontWeight: "bold",
-          }}
-        >
-          Adicionar workspace
-        </Text>
+        <View>
+          <Text
+            style={{
+              color: "#FFF",
+              fontSize: 14,
+              marginHorizontal: 20,
+            }}
+          >
+            Convidar para
+          </Text>
+          <Text
+            style={{
+              color: "#FFF",
+              fontSize: 18,
+              fontWeight: "bold",
+              marginHorizontal: 20,
+            }}
+          >
+            {activeWorkspace?.name}
+          </Text>
+        </View>
       </View>
       <View
         style={{
+          marginTop: 20,
           paddingHorizontal: 20,
           paddingBottom: 10,
         }}
       >
         <TextInput
           onChangeText={(e) => {
-            setName(e);
+            setEmail(e);
           }}
-          value={name}
+          value={email}
           keyboardType="ascii-capable"
           autoCorrect={false}
           placeholderTextColor="#AAA"
-          placeholder="Nome do workspace"
+          placeholder="Email do convidado"
           style={{
             fontSize: 16,
             height: 50,
@@ -96,18 +88,11 @@ export default function WorkspaceAdd({
         />
       </View>
       <TouchableOpacity
-        onPress={() => {
-          adicionarWorkspace({
-            name,
-          });
-          setPopoverShown(false);
-          setTimeout(() => {
-            setTab("list");
-          }, 400);
-        }}
+        onPress={() => {}}
         style={{
+          paddingBottom: 15,
           marginTop: 10,
-          backgroundColor: name.length >= 5 ? "#3E6FBC" : "#333",
+          backgroundColor: validator.validate(email) ? "#3E6FBC" : "#333",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -132,7 +117,7 @@ export default function WorkspaceAdd({
               fontWeight: "bold",
             }}
           >
-            Adicionar workspace
+            Convidar membro
           </Text>
           <View
             style={{
@@ -143,10 +128,10 @@ export default function WorkspaceAdd({
               alignItems: "center",
             }}
           >
-            <Ionicons name="add" color="#FFF" size={20} />
+            <MaterialIcons name="person-add-alt-1" color="#FFF" size={20} />
           </View>
         </View>
       </TouchableOpacity>
-    </>
+    </View>
   );
 }

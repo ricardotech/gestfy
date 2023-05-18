@@ -11,20 +11,33 @@ import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
-import { useAuth } from "../../../../../contexts/Auth";
-import { useControllers } from "../../../../../contexts/Controllers";
+import { useServices } from "../../../../../contexts/Services";
 import WorkspaceList from "./WorkspaceList";
 import WorkspaceAdd from "./WorkspaceAdd";
+import { Modalize } from "react-native-modalize";
 
-export default function Workspace() {
-  const { user, api } = useAuth();
-  const { workspaces, activeWorkspace, setActiveWorkspace } = useControllers();
+export default function Workspace({
+  activeTab,
+  setActiveTab,
+  openModal,
+  closeModal,
+}: {
+  activeTab: string;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<"Home" | "Add" | "Ellipsis">
+  >;
+  openModal: () => void;
+  closeModal: () => void;
+}) {
+  const { user, workspaces, activeWorkspace, setActiveWorkspace } =
+    useServices();
 
   const [popoverShown, setPopoverShown] = useState(false);
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const [tab, setTab] = useState<"list" | "add">("list");
+  const [modalTab, setModalTab] = useState("");
 
   return (
     <View
@@ -102,9 +115,11 @@ export default function Workspace() {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setActiveTab("Ellipsis");
+            openModal();
           }}
         >
-          <Ionicons name="apps-outline" color="#EEE" size={20} />
+          <Ionicons name="ellipsis-horizontal-circle" color="#EEE" size={28} />
         </Pressable>
       </View>
       <Popover

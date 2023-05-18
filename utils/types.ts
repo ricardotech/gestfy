@@ -2,21 +2,19 @@ import { AxiosInstance } from "axios";
 import { ReactNode } from "react";
 
 export type Task = {
+  _id?: string;
+  workspaceId: string;
   description: string;
-  type: "Project" | "Task";
-  id: string;
   priority: "High" | "Medium" | "Low";
   team?: string;
   status?: "To Do" | "In Progress" | "Done";
   dueDate?: string;
   assignee?: string;
-  workspace?: string;
-  project?: string;
   subtasks?: Task[];
 };
 
 export type Workspace = {
-  _id?: string;
+  _id: string;
   name: string;
   //   creatorId: string;
 };
@@ -47,16 +45,33 @@ export type SignUpCredentials = {
   password: string;
 };
 
-export type AuthContextData = {
+export type ContextData = {
   user: User | undefined | null;
-  signIn: (credentials: SignInCredentials) => Promise<void | "Usuário autenticado com sucesso!" | "Email ou senha inválidos" | "Email inválido" | "Insira uma senha válida">;
+  signIn: (
+    credentials: SignInCredentials
+  ) => Promise<
+    | void
+    | "Usuário autenticado com sucesso!"
+    | "Email ou senha inválidos"
+    | "Email inválido"
+    | "Insira uma senha válida"
+  >;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   isLoading: boolean;
   token: string;
   api: AxiosInstance;
+  tasks: Task[] | undefined | null;
+  addTask: (task: Task) => void;
+  removerTask: (taskId: string) => void;
+  getWorkspaces: () => Promise<Workspace[]>;
+  getActiveWorkspace: (workspaces: Workspace[]) => Promise<void>;
+  workspaces: Workspace[] | undefined | null;
+  activeWorkspace: Workspace | undefined | null;
+  setActiveWorkspace: (workspace: Workspace) => Promise<void>;
+  addWorkspace: (workspace: Workspace) => Promise<void>;
 };
 
-export type AuthProviderProps = {
+export type ContextProviderProps = {
   children: ReactNode;
 };

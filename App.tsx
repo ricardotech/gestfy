@@ -16,8 +16,7 @@ import {
 
 import Routes from "./routes";
 import Loading from "./pages/Loading";
-import { WorkspacesProvider } from "./contexts/Controllers";
-import { AuthProvider } from "./contexts/Auth";
+import { ServicesProvider } from "./contexts/Services";
 
 export default function Index() {
   LogBox.ignoreAllLogs();
@@ -46,11 +45,11 @@ export default function Index() {
       >
         <NavigationContainer>
           <StatusBar barStyle="light-content" />
-          <WorkspacesProvider>
-            <AuthProvider>
+          <ServicesProvider>
+            <ServicesProvider>
               <Routes />
-            </AuthProvider>
-          </WorkspacesProvider>
+            </ServicesProvider>
+          </ServicesProvider>
         </NavigationContainer>
       </View>
     </ThemeProvider>

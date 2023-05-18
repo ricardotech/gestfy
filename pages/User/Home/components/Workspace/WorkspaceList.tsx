@@ -11,8 +11,7 @@ import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
-import { useAuth } from "../../../../../contexts/Auth";
-import { useControllers } from "../../../../../contexts/Controllers";
+import { useServices } from "../../../../../contexts/Services";
 
 export default function WorkspaceList({
   tab,
@@ -23,8 +22,7 @@ export default function WorkspaceList({
   setTab: any;
   setPopoverShown: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { user, api } = useAuth();
-  const { workspaces, activeWorkspace, setActiveWorkspace } = useControllers();
+  const { user, workspaces, activeWorkspace, setActiveWorkspace } = useServices();
 
   return (
     <>

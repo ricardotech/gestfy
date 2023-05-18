@@ -3,13 +3,13 @@ import { View, Text, Pressable } from "react-native";
 import { HorizontalScroll } from "../../../../components/Listing";
 import { useNavigation } from "@react-navigation/native";
 import { Avatar } from "react-native-design-system";
-import { useControllers } from "../../../../contexts/Controllers";
+import { useServices } from "../../../../contexts/Services";
 import { Task } from "../../../../utils/types";
 
 import { Ionicons } from "@expo/vector-icons";
 
 export default function tasks() {
-  const { tasks } = useControllers();
+  const { tasks } = useServices();
 
   const navigation = useNavigation();
 

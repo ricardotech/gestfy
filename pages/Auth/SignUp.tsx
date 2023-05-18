@@ -10,11 +10,11 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { useAuth } from "../../contexts/Auth";
+import { useServices } from "../../contexts/Services";
 import DropdownAlert from "react-native-dropdownalert";
 
 export default function SignUp() {
-  const { signUp } = useAuth();
+  const { signUp } = useServices();
 
   const navigation = useNavigation();
 
