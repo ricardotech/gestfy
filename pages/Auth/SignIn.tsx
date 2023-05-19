@@ -10,11 +10,11 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { useAuth } from "../../contexts/Auth";
+import { useServices } from "../../contexts/Services";
 import DropdownAlert from "react-native-dropdownalert";
 
 export default function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn } = useServices();
 
   const navigation = useNavigation();
 
@@ -95,7 +95,7 @@ export default function SignIn() {
                     E-mail
                   </Text>
                   <TextInput
-                    keyboardType="ascii-capable"
+                    keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
                     autoCorrect={false}

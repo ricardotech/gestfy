@@ -4,20 +4,21 @@ import { useNavigation } from "@react-navigation/native";
 import UserRoutes from "./user.routes";
 import AuthRoutes from "./auth.routes";
 import Loading from "../pages/Loading";
-import { useAuth } from "../contexts/Auth";
+import { useServices } from "../contexts/Services";
+import Onboarding from "../pages/User/Onboarding";
 
 export default function Routes() {
-  const { user } = useAuth();
+  const { user, workspaces } = useServices();
 
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 10);
   }, []);
 
   if (loading) return <Loading />;
 
-  return user ? <UserRoutes /> : <AuthRoutes />;
+  return user ? workspaces ? <UserRoutes /> : <Onboarding /> : <AuthRoutes />;
 }

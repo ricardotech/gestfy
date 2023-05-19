@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -14,20 +14,50 @@ import Popover, {
   PopoverMode,
   PopoverPlacement,
 } from "react-native-popover-view";
-import { Projects, Workspace, Add, Widgets, BottomTab } from "./components";
-import { useAuth } from "../../../contexts/Auth";
+import { Workspace, Add, Widgets, BottomTab } from "./components";
+import { handleApi, useServices } from "../../../contexts/Services";
+import Ellipsis from "./components/Ellipsis";
+import Loading from "../../Loading";
 
 export default function HomeScreen() {
-  const { signOut } = useAuth();
+  const {
+    user,
+    api,
+    signOut,
+    getWorkspaces,
+    getActiveWorkspace,
+    getTasks,
+    tasks,
+  } = useServices();
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [refreshing, setRefreshing] = React.useState(false);
   const [popoverShown, setPopoverShown] = React.useState(false);
 
-  const [activeTab, setActiveTab] = React.useState<"Home" | "Add">("Home");
+  const [activeTab, setActiveTab] = React.useState<"Home" | "Add" | "Ellipsis">(
+    "Home"
+  );
+
+  useEffect(() => {
+    getWorkspaces().then((workspaces) => {
+      getActiveWorkspace(workspaces).then((activeWorkspace) => {
+        getTasks(activeWorkspace._id).then((tasks) => {
+          setLoading(false);
+        });
+      });
+    });
+  }, []);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    console.log("refreshing");
+    getWorkspaces().then((workspaces) => {
+      getActiveWorkspace(workspaces).then((activeWorkspace) => {
+        getTasks(activeWorkspace._id).then((tasks) => {
+          setLoading(false);
+        });
+      });
+    });
     setRefreshing(false);
   }, []);
 
@@ -52,13 +82,7 @@ export default function HomeScreen() {
     }
   }
 
-  function renderContent() {
-    return (
-      <View>
-        <Text>Content</Text>
-      </View>
-    );
-  }
+  if (loading) return <Loading />;
 
   return (
     <View
@@ -68,7 +92,12 @@ export default function HomeScreen() {
         width: "100%",
       }}
     >
-      <Workspace />
+      <Workspace
+        openModal={openModal}
+        closeModal={closeModal}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -79,14 +108,6 @@ export default function HomeScreen() {
         }
       >
         <Widgets />
-        <TouchableOpacity
-          onPress={signOut}
-          style={{
-            height: 40,
-            width: 40,
-            backgroundColor: "red",
-          }}
-        />
       </ScrollView>
       <BottomTab
         activeTab={activeTab}
@@ -104,7 +125,8 @@ export default function HomeScreen() {
           setActiveTab("Home");
         }}
       >
-        <Add closeModal={closeModal} />
+        {activeTab === "Add" && <Add closeModal={closeModal} />}
+        {activeTab === "Ellipsis" && <Ellipsis />}
       </Modalize>
     </View>
   );

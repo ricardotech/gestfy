@@ -13,22 +13,20 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
-import { useControllers } from "../../../../../contexts/WorkspacesContext";
+import { useServices } from "../../../../../contexts/Services";
 
 export default function AddSquad({
   activeTab,
   setActiveTab,
   closeModal,
 }: {
-  activeTab: "Select" | "Widget" | "Projeto" | "Squad" | "Workspace";
+  activeTab: "Widget" | "Projeto" | "Squad" | "Workspace";
   setActiveTab: React.Dispatch<
-    React.SetStateAction<
-      "Select" | "Widget" | "Projeto" | "Squad" | "Workspace"
-    >
+    React.SetStateAction<"Widget" | "Projeto" | "Squad" | "Workspace">
   >;
   closeModal: () => void;
 }) {
-  const { adicionarTask } = useControllers();
+  const { adicionarTask } = useServices();
 
   const navigation = useNavigation();
 
@@ -220,7 +218,7 @@ export default function AddSquad({
         <TouchableOpacity
           onPress={() => {
             activeWidgetTab === "Widget"
-              ? setActiveTab("Select")
+              ? setActiveTab("Widget")
               : setActiveWidgetTab("Widget");
           }}
         >

@@ -9,18 +9,20 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 import {
-  AuthContextData,
-  AuthProviderProps,
+  ContextData,
+  ContextProviderProps,
   SignInCredentials,
   SignUpCredentials,
+  Task,
   User,
+  Workspace,
 } from "../utils/types";
 import validator from "email-validator";
 
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
 
-export const AuthContext = createContext({} as AuthContextData);
+export const ServicesContext = createContext({} as ContextData);
 
 async function signOut() {
   await AsyncStorage.removeItem(TOKEN);
@@ -28,7 +30,8 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL = "http://localhost:3000";
+const API_URL =
+  "https://4c5a-2804-14c-3f89-8904-473-e98a-ecb8-8361.ngrok-free.app";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {
@@ -51,40 +54,92 @@ async function handleApi() {
   );
 }
 
-function AuthProvider({ children }: AuthProviderProps) {
+export const ACTIVEWORKSPACE = "@Controller:activeworkspace";
+
+function ServicesProvider({ children }: ContextProviderProps) {
   const [user, setUser] = useState<User | null>();
   const [token, setToken] = useState<string>("");
 
   const [error, setError] = useState<Error | null>(null);
-
   const [isLoading, setIsLoading] = useState(false);
 
-  // trocar setUser(storagedUser)
-  // manter storagedToken
-  // get userId from token
-  // request user by id
-  // setUser
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  async function loadStoragedData() {
+    const storagedUser = await AsyncStorage.getItem(USER);
+    const storagedToken = await AsyncStorage.getItem(TOKEN);
+    if (storagedUser && storagedToken) {
+      setUser(JSON.parse(storagedUser));
+      setToken(JSON.stringify(TOKEN));
+    }
+  }
 
   useEffect(() => {
-    async function loadStoragedData() {
-      const storagedUser = await AsyncStorage.getItem(USER);
-      const storagedToken = await AsyncStorage.getItem(TOKEN);
-      if (storagedUser && storagedToken) {
-        setUser(JSON.parse(storagedUser));
-        setToken(JSON.stringify(TOKEN));
-      }
-    }
-
     loadStoragedData();
   }, []);
 
-  useEffect(() => {
-    if (error !== null) {
-      setTimeout(() => {
-        setError(null);
-      }, 1250);
+  const addTask = async (task: Task) => {
+    await handleApi();
+    api.post("/tasks", task).then((res) => {
+      setTasks([...tasks, task]);
+    });
+  };
+
+  const setActiveWorkspace = async (workspace: Workspace | undefined) => {
+    if (workspace === undefined) {
+      await AsyncStorage.removeItem(ACTIVEWORKSPACE);
+    } else {
+      await AsyncStorage.setItem(ACTIVEWORKSPACE, workspace._id);
+      setActiveWorkspaceState(workspace);
     }
-  }, [error]);
+  };
+
+  const addWorkspace = async (workspace: Workspace) => {
+    await handleApi();
+    api.post("/workspaces", workspace).then((res) => {
+      console.log(res);
+
+      getWorkspaces();
+    });
+  };
+
+  const getTasks = async (workspaceId: string): Promise<Task[]> => {
+    await handleApi();
+    const res = await api.get(`/tasks`);
+    setTasks(res.data);
+
+    return res.data;
+  };
+
+  const getWorkspaces = async () => {
+    await handleApi();
+    const res = await api.get("/workspaces");
+    setWorkspaces(res.data);
+
+    return res.data;
+  };
+
+  const getActiveWorkspace = async (workspaces: Workspace[]) => {
+    const workspaceId = await AsyncStorage.getItem(ACTIVEWORKSPACE);
+
+    if (workspaceId) {
+      const workspace = workspaces.filter(
+        (workspace) => workspace._id === workspaceId
+      );
+
+      setActiveWorkspace(workspace[0]);
+      return workspace[0];
+    } else {
+      setActiveWorkspace(workspaces[0]);
+      return workspaces[0];
+    }
+  };
+
+  const removerTask = (taskId: string) => {
+    setTasks(tasks.filter((task) => task._id !== taskId));
+  };
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -115,9 +170,10 @@ function AuthProvider({ children }: AuthProviderProps) {
               );
               setToken(response.data.token);
               setUser({
-                id: response.data.user.id,
+                _id: response.data.user._id,
                 email: response.data.user.email,
                 role: response.data.user.role,
+                name: response.data.user.name,
               });
             }, 1250);
             return "Usuário autenticado com sucesso!";
@@ -149,13 +205,12 @@ function AuthProvider({ children }: AuthProviderProps) {
           if (response.status === 203) {
             return response.data;
           } else {
-            console.log(response.data)
             setTimeout(async () => {
               AsyncStorage.setItem(TOKEN, response.data.token);
               AsyncStorage.setItem(USER, JSON.stringify(response.data.user));
               setToken(response.data.token);
               setUser({
-                id: response.data.user.id,
+                _id: response.data.user._id,
                 name: response.data.user.name,
                 email: response.data.user.email,
                 role: response.data.user.role,
@@ -181,11 +236,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     AsyncStorage.removeItem(TOKEN).then(() => {
       setUser(null);
     });
+    setActiveWorkspace(undefined);
     // AsyncStorage.clear().then(() => {});
   }
 
   return (
-    <AuthContext.Provider
+    <ServicesContext.Provider
       value={{
         token,
         user,
@@ -194,17 +250,27 @@ function AuthProvider({ children }: AuthProviderProps) {
         signOut,
         isLoading,
         api,
+        workspaces,
+        tasks,
+        getTasks,
+        getWorkspaces,
+        getActiveWorkspace,
+        addWorkspace,
+        setActiveWorkspace,
+        activeWorkspace,
+        addTask,
+        removerTask,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </ServicesContext.Provider>
   );
 }
 
-function useAuth() {
-  const context = useContext(AuthContext);
+function useServices() {
+  const context = useContext(ServicesContext);
 
   return context;
 }
 
-export { AuthProvider, useAuth, signOut, handleApi };
+export { ServicesProvider, useServices, signOut, handleApi };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -11,9 +11,33 @@ import { Avatar } from "react-native-design-system";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import { useServices } from "../../../../../contexts/Services";
+import WorkspaceList from "./WorkspaceList";
+import WorkspaceAdd from "./WorkspaceAdd";
+import { Modalize } from "react-native-modalize";
 
-export default function Workspace() {
+export default function Workspace({
+  activeTab,
+  setActiveTab,
+  openModal,
+  closeModal,
+}: {
+  activeTab: string;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<"Home" | "Add" | "Ellipsis">
+  >;
+  openModal: () => void;
+  closeModal: () => void;
+}) {
+  const { user, workspaces, activeWorkspace, setActiveWorkspace } =
+    useServices();
+
   const [popoverShown, setPopoverShown] = useState(false);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [tab, setTab] = useState<"list" | "add">("list");
+  const [modalTab, setModalTab] = useState("");
 
   return (
     <View
@@ -43,10 +67,18 @@ export default function Workspace() {
         }}
       >
         <Avatar
-          title="CV"
+          title={
+            activeWorkspace
+              ? activeWorkspace.name[0] + activeWorkspace.name[1]
+              : ""
+          }
           rounded
+          style={{
+            backgroundColor: "#3E6FBC",
+          }}
           textStyle={{
             fontSize: 16,
+            color: "#FFF",
           }}
         />
 
@@ -62,14 +94,14 @@ export default function Workspace() {
               fontFamily: "Poppins_700Bold",
             }}
           >
-            AgencyPro
+            {activeWorkspace?.name}
           </Text>
           <Text
             style={{
               color: "#EEE",
             }}
           >
-            Ricardo Fonseca
+            {user?.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -83,38 +115,44 @@ export default function Workspace() {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            setActiveTab("Ellipsis");
+            openModal();
           }}
         >
-          <Ionicons name="apps-outline" color="#EEE" size={20} />
+          <Ionicons name="ellipsis-horizontal-circle" color="#EEE" size={28} />
         </Pressable>
       </View>
       <Popover
+        backgroundStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+        }}
         popoverStyle={{
           backgroundColor: "#202123",
-          height: 200,
           width: 300,
           borderRadius: 8,
         }}
         isVisible={popoverShown}
-        onRequestClose={() => setPopoverShown(false)}
+        onRequestClose={() => {
+          setPopoverShown(false);
+          setTimeout(() => {
+            setTab("list");
+          }, 400);
+        }}
       >
-        <TouchableOpacity
-          style={{
-            padding: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{
-              color: "#FFF",
-            }}
-          >
-            My Workspace
-          </Text>
-        </TouchableOpacity>
+        {tab === "list" && (
+          <WorkspaceList
+            tab={tab}
+            setTab={setTab}
+            setPopoverShown={setPopoverShown}
+          />
+        )}
+        {tab === "add" && (
+          <WorkspaceAdd
+            tab={tab}
+            setTab={setTab}
+            setPopoverShown={setPopoverShown}
+          />
+        )}
       </Popover>
     </View>
   );

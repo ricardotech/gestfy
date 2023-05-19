@@ -11,7 +11,7 @@ export default function BottomTab({
   openModal,
 }: {
   activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<"Home" | "Add">>;
+  setActiveTab: React.Dispatch<React.SetStateAction<"Home" | "Add" | "Ellipsis">>;
   openModal: () => void;
 }) {
   return (
