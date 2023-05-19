@@ -58,17 +58,6 @@ export default function tasks() {
                   >
                     {widget.description}
                   </Text>
-                  <Ionicons
-                    size={20}
-                    color="#FFF"
-                    name={
-                      widget.priority === "High"
-                        ? "warning"
-                        : widget.priority === "Medium"
-                        ? "alert-circle"
-                        : "checkbox"
-                    }
-                  />
                 </View>
                 <View
                   style={{
@@ -79,14 +68,36 @@ export default function tasks() {
                 >
                   <Text
                     style={{
-                      color: "#FFF",
-                      fontSize: 14,
+                      color:
+                        widget.priority === "High"
+                          ? "rgba(255, 75, 75, 0.9)"
+                          : widget.priority === "Medium"
+                          ? "orange"
+                          : "#FFF",
+                      fontSize: 18,
                       fontFamily: "Poppins_400Regular",
                       marginRight: 10,
                     }}
                   >
-                    {widget.id}
+                    {widget.priority}
                   </Text>
+                  <Ionicons
+                    size={20}
+                    color={
+                      widget.priority === "High"
+                        ? "rgba(255, 75, 75, 0.9)"
+                        : widget.priority === "Medium"
+                        ? "orange"
+                        : "#FFF"
+                    }
+                    name={
+                      widget.priority === "High"
+                        ? "warning"
+                        : widget.priority === "Medium"
+                        ? "alert-circle"
+                        : "checkbox"
+                    }
+                  />
                 </View>
               </Pressable>
             );

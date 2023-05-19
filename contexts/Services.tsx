@@ -80,8 +80,12 @@ function ServicesProvider({ children }: ContextProviderProps) {
     loadStoragedData();
   }, []);
 
-  const addTask = (widget: Task) => {
-    setTasks([...tasks, widget]);
+  const addTask = async (task: Task) => {
+    await handleApi();
+    api.post("/tasks", task).then((res) => {
+      console.log(res.data);
+      setTasks([...tasks, task]);
+    });
   };
 
   const setActiveWorkspace = async (workspace: Workspace | undefined) => {
@@ -102,6 +106,14 @@ function ServicesProvider({ children }: ContextProviderProps) {
     });
   };
 
+  const getTasks = async (workspaceId: string): Promise<Task[]> => {
+    await handleApi();
+    const res = await api.get(`/tasks/${workspaceId}`);
+    setTasks(res.data);
+
+    return res.data;
+  };
+
   const getWorkspaces = async () => {
     await handleApi();
     const res = await api.get("/workspaces");
@@ -119,8 +131,10 @@ function ServicesProvider({ children }: ContextProviderProps) {
       );
 
       setActiveWorkspace(workspace[0]);
+      return workspace[0];
     } else {
       setActiveWorkspace(workspaces[0]);
+      return workspaces[0];
     }
   };
 
@@ -239,6 +253,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
         api,
         workspaces,
         tasks,
+        getTasks,
         getWorkspaces,
         getActiveWorkspace,
         addWorkspace,
