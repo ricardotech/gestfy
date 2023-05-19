@@ -83,7 +83,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
   const addTask = async (task: Task) => {
     await handleApi();
     api.post("/tasks", task).then((res) => {
-      console.log(res.data);
       setTasks([...tasks, task]);
     });
   };
@@ -108,7 +107,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const getTasks = async (workspaceId: string): Promise<Task[]> => {
     await handleApi();
-    const res = await api.get(`/tasks/${workspaceId}`);
+    const res = await api.get(`/tasks`);
     setTasks(res.data);
 
     return res.data;

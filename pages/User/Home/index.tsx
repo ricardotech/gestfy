@@ -20,8 +20,15 @@ import Ellipsis from "./components/Ellipsis";
 import Loading from "../../Loading";
 
 export default function HomeScreen() {
-  const { user, api, signOut, getWorkspaces, getActiveWorkspace, getTasks, tasks } =
-    useServices();
+  const {
+    user,
+    api,
+    signOut,
+    getWorkspaces,
+    getActiveWorkspace,
+    getTasks,
+    tasks,
+  } = useServices();
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -36,7 +43,7 @@ export default function HomeScreen() {
     getWorkspaces().then((workspaces) => {
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
         getTasks(activeWorkspace._id).then((tasks) => {
-          setLoading(false)
+          setLoading(false);
         });
       });
     });
@@ -44,7 +51,13 @@ export default function HomeScreen() {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    console.log("refreshing");
+    getWorkspaces().then((workspaces) => {
+      getActiveWorkspace(workspaces).then((activeWorkspace) => {
+        getTasks(activeWorkspace._id).then((tasks) => {
+          setLoading(false);
+        });
+      });
+    });
     setRefreshing(false);
   }, []);
 
