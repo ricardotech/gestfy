@@ -12,6 +12,7 @@ import HomeScreen from "../pages/User/Home";
 import { Avatar } from "react-native-design-system";
 import ProjectScreen from "../pages/User/Project";
 import Onboarding from "../pages/User/Onboarding";
+import TaskScreen from "../pages/User/Task";
 
 type TabNavigatorParamList = {
   EventListView: { icon: string };
@@ -20,17 +21,10 @@ type TabNavigatorParamList = {
 
 type StackNavigatorParamList = {
   Home: {};
-  Intro: {};
-  Favoritos: {};
-  Course: {
-    id: string;
-  };
-  Lesson: {};
-  Project: {
-    name: string;
-    id: string;
-  };
   Add: {};
+  Task: {
+    id: string;
+  };
 };
 
 const UserStack = createNativeStackNavigator<StackNavigatorParamList>();
@@ -53,8 +47,8 @@ function Stack() {
         }}
       >
         <UserStack.Screen
-          name="Project"
-          component={ProjectScreen}
+          name="Task"
+          component={TaskScreen}
           options={{
             headerShown: false,
             title: "Project",

@@ -34,20 +34,27 @@ export default function tasks() {
             if (widget.workspaceId === activeWorkspace?._id)
               return (
                 <Pressable
+                  onPress={() => {
+                    navigation.navigate(
+                      "Task" as never,
+                      {
+                        id: widget._id,
+                      } as never
+                    );
+                  }}
                   onLongPress={() => {
                     setActiveTask(widget);
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
                     setTimeout(() => {
                       setActiveTask(undefined);
-                    }, 2000);
+                    }, 2500);
                   }}
                   key={i}
                   style={{
                     marginTop: 10,
                     height: 150,
                     width: "49%",
-                    backgroundColor:
-                      activeTask === widget ? "rgba(255, 75, 75, 1)" : "#444",
+                    backgroundColor: activeTask === widget ? "#3E6FBC" : "#444",
                     borderRadius: 10,
                     padding: 10,
                     justifyContent: "space-between",
@@ -63,7 +70,7 @@ export default function tasks() {
                         alignItems: "center",
                       }}
                     >
-                      <Ionicons name="trash" color="#FFF" size={30} />
+                      <Ionicons name="checkbox" color="#FFF" size={40} />
                     </View>
                   ) : (
                     <View>

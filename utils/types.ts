@@ -65,6 +65,7 @@ export type ContextData = {
   addTask: (task: Task) => void;
   removerTask: (taskId: string) => void;
   getWorkspaces: () => Promise<Workspace[]>;
+  getTask: (id: string) => Promise<Task>;
   getTasks: (workspaceId: string) => Promise<Task[]>;
   getActiveWorkspace: (workspaces: Workspace[]) => Promise<Workspace>;
   workspaces: Workspace[] | undefined | null;
