@@ -41,20 +41,14 @@ function Stack() {
         }}
       />
 
-      <UserStack.Group
-        screenOptions={{
-          presentation: "modal",
+      <UserStack.Screen
+        name="Task"
+        component={TaskScreen}
+        options={{
+          headerShown: false,
+          title: "Project",
         }}
-      >
-        <UserStack.Screen
-          name="Task"
-          component={TaskScreen}
-          options={{
-            headerShown: false,
-            title: "Project",
-          }}
-        />
-      </UserStack.Group>
+      />
     </UserStack.Navigator>
   );
 }

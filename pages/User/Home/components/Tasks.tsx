@@ -54,7 +54,14 @@ export default function tasks() {
                     marginTop: 10,
                     height: 150,
                     width: "49%",
-                    backgroundColor: activeTask === widget ? "#3E6FBC" : "#444",
+                    backgroundColor:
+                      activeTask === widget
+                        ? "#3E6FBC"
+                        : widget.priority === "High"
+                        ? "rgba(255, 55, 55, 0.4)"
+                        : widget.priority === "Medium"
+                        ? "rgba(255, 155, 55, 0.5)"
+                        : "#333",
                     borderRadius: 10,
                     padding: 10,
                     justifyContent: "space-between",
@@ -92,46 +99,6 @@ export default function tasks() {
                         >
                           {widget.description}
                         </Text>
-                      </View>
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color:
-                              widget.priority === "High"
-                                ? "rgba(255, 75, 75, 0.9)"
-                                : widget.priority === "Medium"
-                                ? "orange"
-                                : "#FFF",
-                            fontSize: 18,
-                            fontFamily: "Poppins_400Regular",
-                            marginRight: 10,
-                          }}
-                        >
-                          {widget.priority}
-                        </Text>
-                        <Ionicons
-                          size={20}
-                          color={
-                            widget.priority === "High"
-                              ? "rgba(255, 75, 75, 0.9)"
-                              : widget.priority === "Medium"
-                              ? "orange"
-                              : "#FFF"
-                          }
-                          name={
-                            widget.priority === "High"
-                              ? "warning"
-                              : widget.priority === "Medium"
-                              ? "alert-circle"
-                              : "checkbox"
-                          }
-                        />
                       </View>
                     </View>
                   )}

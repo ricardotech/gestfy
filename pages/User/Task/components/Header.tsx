@@ -3,7 +3,13 @@ import React from "react";
 
 import { View, Text, TouchableOpacity } from "react-native";
 
-export default function Header() {
+export default function Header({
+  edit,
+  setEdit,
+}: {
+  edit: boolean;
+  setEdit: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const navigation = useNavigation();
 
   return (
@@ -24,6 +30,16 @@ export default function Header() {
           }}
         >
           Voltar
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setEdit(!edit)}>
+        <Text
+          style={{
+            color: "#3E6FBC",
+            fontSize: 18,
+          }}
+        >
+          Editar
         </Text>
       </TouchableOpacity>
     </View>
