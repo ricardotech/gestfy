@@ -129,7 +129,7 @@ export default function HomeScreen() {
         }}
       >
         {activeTab === "Add" && <Add closeModal={closeModal} />}
-        {activeTab === "Ellipsis" && <Ellipsis />}
+        {activeTab === "Ellipsis" && <Ellipsis closeModal={closeModal} />}
       </Modalize>
     </View>
   );

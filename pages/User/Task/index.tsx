@@ -14,7 +14,6 @@ import AddDueDate from "./components/DueDate/add";
 import FinishTask from "./components/FinishTask";
 import Header from "./components/Header";
 import Priority from "./components/Priority";
-import Status from "./components/Status";
 import Tasks from "./components/Tasks";
 
 export default function TaskScreen({ route }: any) {
@@ -112,8 +111,13 @@ export default function TaskScreen({ route }: any) {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
             />
-            <Status />
-            <Description />
+
+            <Description
+              openModal={openModal}
+              closeModal={closeModal}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
             <Tasks />
           </View>
           <FinishTask />
@@ -141,6 +145,21 @@ export default function TaskScreen({ route }: any) {
             dueDate={dueDate}
             setDueDate={setDueDate}
           />
+        )}
+        {activeTab === "AddDescription" && (
+          <View
+            style={{
+              padding: 20,
+            }}
+          >
+            <Text
+              style={{
+                color: "#FFF",
+              }}
+            >
+              AddDescription
+            </Text>
+          </View>
         )}
       </Modalize>
     </View>

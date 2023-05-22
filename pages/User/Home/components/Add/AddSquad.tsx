@@ -26,7 +26,7 @@ export default function AddSquad({
   >;
   closeModal: () => void;
 }) {
-  const { adicionarTask } = useServices();
+  const { addTask } = useServices();
 
   const navigation = useNavigation();
 
@@ -154,12 +154,12 @@ export default function AddSquad({
     return (
       <Pressable
         onPress={() => {
-          adicionarTask({
-            description: description,
-            id: activeProject ? activeProject : activeTask,
-            type: activeProject ? "Project" : "Task",
-            priority: priority ? priority : "Low",
-          });
+          // adicionarTask({
+          //   description: description,
+          //   id: activeProject ? activeProject : activeTask,
+          //   type: activeProject ? "Project" : "Task",
+          //   priority: priority ? priority : "Low",
+          // });
           closeModal();
         }}
         style={{
@@ -220,6 +220,7 @@ export default function AddSquad({
             activeWidgetTab === "Widget"
               ? setActiveTab("Widget")
               : setActiveWidgetTab("Widget");
+            closeModal();
           }}
         >
           <Text

@@ -2,7 +2,17 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-export default function Description() {
+export default function Description({
+  openModal,
+  closeModal,
+  activeTab,
+  setActiveTab,
+}: {
+  openModal: () => void;
+  closeModal: () => void;
+  activeTab: string | undefined;
+  setActiveTab: any;
+}) {
   return (
     <View
       style={{
@@ -20,6 +30,10 @@ export default function Description() {
         Descrição
       </Text>
       <TouchableOpacity
+        onPress={() => {
+          setActiveTab("AddDescription");
+          openModal();
+        }}
         style={{
           marginTop: 10,
           backgroundColor: "rgba(55, 55, 55, 0.5)",

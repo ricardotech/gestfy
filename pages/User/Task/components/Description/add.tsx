@@ -15,7 +15,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
-export default function AddDueDate({
+export default function AddDescription({
   closeModal,
   activeTab,
   setActiveTab,
