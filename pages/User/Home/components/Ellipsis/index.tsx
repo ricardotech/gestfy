@@ -3,11 +3,11 @@ import { TouchableOpacity } from "react-native";
 import { Platform, Text, View } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-design-system";
-import { useServices } from "../../../../../contexts/Services";
+import { handleApi, useServices } from "../../../../../contexts/Services";
 import AddMemberToWorkspace from "./AddMemberToWorkspace";
 
 export default function Ellipsis({ closeModal }: { closeModal: () => void }) {
-  const { signOut } = useServices();
+  const { signOut, api } = useServices();
 
   const [tab, setTab] = useState<"list" | "addMemberToWorkspace">("list");
 
@@ -97,6 +97,15 @@ export default function Ellipsis({ closeModal }: { closeModal: () => void }) {
             icon={
               <MaterialIcons name="person-add-alt-1" color="#EEE" size={20} />
             }
+          />
+          <Item
+            name="Deletar todos workspaces"
+            onPress={async () => {
+              handleApi();
+              const res = await api.post("/workspaces/all");
+              console.log(res.data);
+            }}
+            icon={<Ionicons name="trash" color="#EEE" size={20} />}
           />
           <Item
             name="Sair da sua conta"

@@ -11,6 +11,7 @@ import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 import {
   ContextData,
   ContextProviderProps,
+  DateObj,
   SignInCredentials,
   SignUpCredentials,
   Task,
@@ -18,6 +19,7 @@ import {
   Workspace,
 } from "../utils/types";
 import validator from "email-validator";
+import moment from "moment";
 
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
@@ -64,6 +66,13 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
+  const [activeDate, setActiveDate] = useState<DateObj>({
+    day: moment().format("DD"),
+    month: moment().format("MM"),
+    year: moment().format("YYYY"),
+    weekDayAbr: moment().format("ddd"),
+    weekDay: moment().format("dddd"),
+  });
   const [tasks, setTasks] = useState<Task[]>([]);
 
   async function loadStoragedData() {
@@ -74,10 +83,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
       setToken(JSON.stringify(TOKEN));
     }
   }
-
-  useEffect(() => {
-    loadStoragedData();
-  }, []);
 
   const addTask = async (task: Task) => {
     await handleApi();
@@ -94,22 +99,39 @@ function ServicesProvider({ children }: ContextProviderProps) {
     return task;
   };
 
+  const updateTask = async (id: string, taskData: any) => {
+    await handleApi();
+
+    try {
+      const updatedTask = await api.put(`/tasks/${id}`, taskData);
+      const updatedTasks = tasks.map((task) => {
+        if (task._id === id) {
+          return updatedTask.data;
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const setActiveWorkspace = async (workspace: Workspace | undefined) => {
     if (workspace === undefined) {
       await AsyncStorage.removeItem(ACTIVEWORKSPACE);
     } else {
-      await AsyncStorage.setItem(ACTIVEWORKSPACE, workspace._id);
+      await AsyncStorage.setItem(ACTIVEWORKSPACE, String(workspace._id));
       setActiveWorkspaceState(workspace);
     }
   };
 
   const addWorkspace = async (workspace: Workspace) => {
     await handleApi();
-    api.post("/workspaces", workspace).then((res) => {
-      console.log(res);
-
-      getWorkspaces();
+    const res = api.post("/workspaces", workspace).then((res) => {
+      setWorkspaces([...workspaces, workspace]);
+      return res.data
     });
+    return res;
   };
 
   const getTasks = async (workspaceId: string): Promise<Task[]> => {
@@ -147,6 +169,10 @@ function ServicesProvider({ children }: ContextProviderProps) {
   const removerTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task._id !== taskId));
   };
+
+  useEffect(() => {
+    loadStoragedData();
+  }, []);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -261,6 +287,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
         tasks,
         getTask,
         getTasks,
+        updateTask,
         getWorkspaces,
         getActiveWorkspace,
         addWorkspace,
@@ -268,6 +295,8 @@ function ServicesProvider({ children }: ContextProviderProps) {
         activeWorkspace,
         addTask,
         removerTask,
+        activeDate,
+        setActiveDate,
       }}
     >
       {children}

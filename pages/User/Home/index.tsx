@@ -21,17 +21,23 @@ import Ellipsis from "./components/Ellipsis";
 import Loading from "../../Loading";
 import moment from "moment";
 import "moment/locale/pt-br"; // Importe o locale para português do Brasil
+import { DateObj, Workspace as WorkspaceType } from "../../../utils/types";
+import CreateWorkspace from "./components/CreateWorkspace";
 
 export default function HomeScreen() {
   const {
     user,
     api,
     signOut,
+    activeDate,
+    setActiveDate,
     getWorkspaces,
     getActiveWorkspace,
     getTasks,
     tasks,
   } = useServices();
+
+  const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -43,16 +49,6 @@ export default function HomeScreen() {
 
   const [taskDisplay, setTaskDisplay] = useState<"one" | "two">("one");
 
-  const dataAtualObj = {
-    day: moment().format("DD"),
-    month: moment().format("MM"),
-    year: moment().format("YYYY"),
-    weekDayAbr: moment().format("ddd"),
-    weekDay: moment().format("dddd"),
-  };
-
-  const [dataAtual, setDataAtual] = useState(dataAtualObj);
-
   const obterListaDatas = () => {
     moment.locale("pt-br"); // Defina o idioma para português do Brasil
 
@@ -63,7 +59,7 @@ export default function HomeScreen() {
 
     const listaDatas = [];
 
-    listaDatas.push(dataAtualObj);
+    listaDatas.push(activeDate);
 
     for (let i = 0; i < 14; i++) {
       const data = {
@@ -96,7 +92,7 @@ export default function HomeScreen() {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getTasks(activeWorkspace._id).then((tasks) => {
+        getTasks(String(activeWorkspace._id)).then((tasks) => {
           setLoading(false);
         });
       });
@@ -131,15 +127,33 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getWorkspaces().then((workspaces) => {
+      setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getTasks(activeWorkspace._id).then((tasks) => {
+        console.log("activeworkspaces", activeWorkspace);
+        if (activeWorkspace) {
+          getTasks(String(activeWorkspace._id)).then((tasks) => {
+            console.log("tasks", tasks);
+            setLoading(false);
+          });
+        } else {
           setLoading(false);
-        });
+        }
       });
     });
   }, []);
 
   if (loading) return <Loading />;
+
+  if (workspaces.length === 0) {
+    return (
+      <CreateWorkspace
+        workspaces={workspaces}
+        setWorkspaces={setWorkspaces}
+        getActiveWorkspace={getActiveWorkspace}
+        getWorkspaces={getWorkspaces}
+      />
+    );
+  }
 
   return (
     <View
@@ -176,7 +190,7 @@ export default function HomeScreen() {
           renderItem={({ item, index }) => (
             <TouchableOpacity
               onPress={() => {
-                setDataAtual(item);
+                setActiveDate(item);
                 calendarRef.current?.scrollToIndex({
                   index: index,
                   animated: true,
@@ -187,7 +201,7 @@ export default function HomeScreen() {
             >
               <Text
                 style={{
-                  color: dataAtual.day === item.day ? "#FFF" : "#999",
+                  color: activeDate.day === item.day ? "#FFF" : "#999",
                   fontSize: 16,
                 }}
               >
@@ -195,7 +209,7 @@ export default function HomeScreen() {
               </Text>
               <Text
                 style={{
-                  color: dataAtual.day === item.day ? "#FFF" : "#999",
+                  color: activeDate.day === item.day ? "#FFF" : "#999",
                   fontSize: 16,
                   fontWeight: "bold",
                 }}
