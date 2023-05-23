@@ -10,7 +10,7 @@ import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
 
-export default function tasks({
+export default function Tasks({
   taskDisplay,
   setTaskDisplay,
 }: {

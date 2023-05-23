@@ -44,7 +44,7 @@ export default function BottomTab({
         }}
       >
         <Ionicons
-          name={taskDisplay === "two" ? "albums" : "square"}
+          name={taskDisplay === "one" ? "albums" : "square"}
           size={35}
           color={activeTab === "Home" ? "#3E6FBC" : "gray"}
         />

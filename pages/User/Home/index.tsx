@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
@@ -35,7 +36,6 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [refreshing, setRefreshing] = React.useState(false);
-  const [popoverShown, setPopoverShown] = React.useState(false);
 
   const [activeTab, setActiveTab] = React.useState<"Home" | "Add" | "Ellipsis">(
     "Home"
@@ -92,18 +92,6 @@ export default function HomeScreen() {
     return listaDatas;
   };
 
-  const listaDatas = obterListaDatas();
-
-  useEffect(() => {
-    getWorkspaces().then((workspaces) => {
-      getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getTasks(activeWorkspace._id).then((tasks) => {
-          setLoading(false);
-        });
-      });
-    });
-  }, []);
-
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
@@ -115,6 +103,10 @@ export default function HomeScreen() {
     });
     setRefreshing(false);
   }, []);
+
+  const listaDatas = obterListaDatas();
+
+  const calendarRef = React.useRef<FlatList>(null);
 
   const modalRef:
     | React.MutableRefObject<null>
@@ -136,6 +128,16 @@ export default function HomeScreen() {
       modalRef.current.close();
     }
   }
+
+  useEffect(() => {
+    getWorkspaces().then((workspaces) => {
+      getActiveWorkspace(workspaces).then((activeWorkspace) => {
+        getTasks(activeWorkspace._id).then((tasks) => {
+          setLoading(false);
+        });
+      });
+    });
+  }, []);
 
   if (loading) return <Loading />;
 
@@ -162,44 +164,63 @@ export default function HomeScreen() {
           />
         }
       >
-        <ScrollView
+        <FlatList
+          data={listaDatas}
+          ref={calendarRef}
           style={{
             height: 60,
             paddingTop: 20,
             paddingHorizontal: 20,
             paddingBottom: 10,
           }}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              onPress={() => {
+                setDataAtual(item);
+                calendarRef.current?.scrollToIndex({
+                  index: index,
+                  animated: true,
+                });
+              }}
+              key={index}
+              style={{ width: "auto", marginRight: 30 }}
+            >
+              <Text
+                style={{
+                  color: dataAtual.day === item.day ? "#FFF" : "#999",
+                  fontSize: 16,
+                }}
+              >
+                {item.day}
+              </Text>
+              <Text
+                style={{
+                  color: dataAtual.day === item.day ? "#FFF" : "#999",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {item.weekDay === "terça-feira"
+                  ? "Terça"
+                  : item.weekDay === "quarta-feira"
+                  ? "Quarta"
+                  : item.weekDay === "quinta-feira"
+                  ? "Quinta"
+                  : item.weekDay === "sexta-feira"
+                  ? "Sexta"
+                  : item.weekDay === "sábado"
+                  ? "Sábado"
+                  : item.weekDay === "domingo"
+                  ? "Domingo"
+                  : item.weekDay === "segunda-feira"
+                  ? "Segunda"
+                  : item.weekDayAbr}
+              </Text>
+            </TouchableOpacity>
+          )}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-        >
-          {listaDatas.map((lista, i) => {
-            return (
-              <TouchableOpacity
-                onPress={() => setDataAtual(lista)}
-                key={i}
-                style={{ marginRight: 30 }}
-              >
-                <Text
-                  style={{
-                    color: dataAtual.day === lista.day ? "#FFF" : "#999",
-                    fontSize: 16,
-                  }}
-                >
-                  {dataAtual.day}
-                </Text>
-                <Text
-                  style={{
-                    color: dataAtual.day === lista.day ? "#FFF" : "#999",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {lista.weekDay}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+        />
 
         <Widgets taskDisplay={taskDisplay} setTaskDisplay={setTaskDisplay} />
       </ScrollView>
@@ -224,13 +245,7 @@ export default function HomeScreen() {
           setActiveTab("Home");
         }}
       >
-        {activeTab === "Add" && (
-          <Add
-            taskDisplay={taskDisplay}
-            setTaskDisplay={setTaskDisplay}
-            closeModal={closeModal}
-          />
-        )}
+        {activeTab === "Add" && <Add closeModal={closeModal} />}
         {activeTab === "Ellipsis" && <Ellipsis closeModal={closeModal} />}
       </Modalize>
     </View>

@@ -14,13 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AddTask from "./AddTask";
 import AddSquad from "./AddSquad";
 
-export default function Add({
-  closeModal,
-
-}: {
-  closeModal: () => void;
-
-}) {
+export default function Add({ closeModal }: { closeModal: () => void }) {
   const [activeTab, setActiveTab] = React.useState<
     "Widget" | "Projeto" | "Squad" | "Workspace"
   >("Widget");
