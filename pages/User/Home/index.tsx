@@ -207,6 +207,7 @@ export default function HomeScreen() {
                       ? "#FFF"
                       : "#999",
                   fontSize: 16,
+                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
                 }}
               >
                 {item.day}
@@ -220,7 +221,7 @@ export default function HomeScreen() {
                       ? "#FFF"
                       : "#999",
                   fontSize: 16,
-                  fontWeight: "bold",
+                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
                 }}
               >
                 {item.weekDay === "terça-feira"
