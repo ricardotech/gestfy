@@ -18,6 +18,8 @@ import { Workspace, Add, Widgets, BottomTab } from "./components";
 import { handleApi, useServices } from "../../../contexts/Services";
 import Ellipsis from "./components/Ellipsis";
 import Loading from "../../Loading";
+import moment from "moment";
+import "moment/locale/pt-br"; // Importe o locale para português do Brasil
 
 export default function HomeScreen() {
   const {
@@ -38,6 +40,59 @@ export default function HomeScreen() {
   const [activeTab, setActiveTab] = React.useState<"Home" | "Add" | "Ellipsis">(
     "Home"
   );
+
+  const [taskDisplay, setTaskDisplay] = useState<"one" | "two">("one");
+
+  const dataAtualObj = {
+    day: moment().format("DD"),
+    month: moment().format("MM"),
+    year: moment().format("YYYY"),
+    weekDayAbr: moment().format("ddd"),
+    weekDay: moment().format("dddd"),
+  };
+
+  const [dataAtual, setDataAtual] = useState(dataAtualObj);
+
+  const obterListaDatas = () => {
+    moment.locale("pt-br"); // Defina o idioma para português do Brasil
+
+    const dataAtual = moment().format("YYYY-MM-DD");
+    const dataUltimaData = moment().add(2, "weeks").format("YYYY-MM-DD");
+    const dataUltimos14Dias = moment(dataUltimaData).subtract(14, "days");
+    const dataProximos14Dias = moment(dataUltimaData);
+
+    const listaDatas = [];
+
+    listaDatas.push(dataAtualObj);
+
+    for (let i = 0; i < 14; i++) {
+      const data = {
+        date: dataUltimos14Dias.add(1, "day").format("YYYY-MM-DD"),
+        day: dataUltimos14Dias.format("DD"),
+        month: dataUltimos14Dias.format("MM"),
+        year: dataUltimos14Dias.format("YYYY"),
+        weekDayAbr: dataUltimos14Dias.format("ddd"),
+        weekDay: dataUltimos14Dias.format("dddd"),
+      };
+      listaDatas.push(data);
+    }
+
+    for (let i = 0; i < 14; i++) {
+      const data = {
+        date: dataProximos14Dias.add(1, "day").format("YYYY-MM-DD"),
+        day: dataProximos14Dias.format("DD"),
+        month: dataProximos14Dias.format("MM"),
+        year: dataProximos14Dias.format("YYYY"),
+        weekDayAbr: dataProximos14Dias.format("ddd"),
+        weekDay: dataProximos14Dias.format("dddd"),
+      };
+      listaDatas.push(data);
+    }
+
+    return listaDatas;
+  };
+
+  const listaDatas = obterListaDatas();
 
   useEffect(() => {
     getWorkspaces().then((workspaces) => {
@@ -107,9 +162,50 @@ export default function HomeScreen() {
           />
         }
       >
-        <Widgets />
+        <ScrollView
+          style={{
+            height: 60,
+            paddingTop: 20,
+            paddingHorizontal: 20,
+            paddingBottom: 10,
+          }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          {listaDatas.map((lista, i) => {
+            return (
+              <TouchableOpacity
+                onPress={() => setDataAtual(lista)}
+                key={i}
+                style={{ marginRight: 30 }}
+              >
+                <Text
+                  style={{
+                    color: dataAtual.day === lista.day ? "#FFF" : "#999",
+                    fontSize: 16,
+                  }}
+                >
+                  {dataAtual.day}
+                </Text>
+                <Text
+                  style={{
+                    color: dataAtual.day === lista.day ? "#FFF" : "#999",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {lista.weekDay}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
+        <Widgets taskDisplay={taskDisplay} setTaskDisplay={setTaskDisplay} />
       </ScrollView>
       <BottomTab
+        taskDisplay={taskDisplay}
+        setTaskDisplay={setTaskDisplay}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         openModal={openModal}
@@ -128,7 +224,13 @@ export default function HomeScreen() {
           setActiveTab("Home");
         }}
       >
-        {activeTab === "Add" && <Add closeModal={closeModal} />}
+        {activeTab === "Add" && (
+          <Add
+            taskDisplay={taskDisplay}
+            setTaskDisplay={setTaskDisplay}
+            closeModal={closeModal}
+          />
+        )}
         {activeTab === "Ellipsis" && <Ellipsis closeModal={closeModal} />}
       </Modalize>
     </View>

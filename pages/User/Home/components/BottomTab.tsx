@@ -9,10 +9,16 @@ export default function BottomTab({
   activeTab,
   setActiveTab,
   openModal,
+  taskDisplay,
+  setTaskDisplay,
 }: {
   activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<"Home" | "Add" | "Ellipsis">>;
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<"Home" | "Add" | "Ellipsis">
+  >;
   openModal: () => void;
+  taskDisplay: "one" | "two";
+  setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
 }) {
   return (
     <View
@@ -34,11 +40,11 @@ export default function BottomTab({
       <Pressable
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          setActiveTab("Home");
+          taskDisplay === "two" ? setTaskDisplay("one") : setTaskDisplay("two");
         }}
       >
         <Ionicons
-          name={"albums"}
+          name={taskDisplay === "two" ? "albums" : "square"}
           size={35}
           color={activeTab === "Home" ? "#3E6FBC" : "gray"}
         />

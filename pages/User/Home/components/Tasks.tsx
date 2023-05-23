@@ -10,7 +10,13 @@ import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
 
-export default function tasks() {
+export default function tasks({
+  taskDisplay,
+  setTaskDisplay,
+}: {
+  taskDisplay: "one" | "two";
+  setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
+}) {
   const { tasks, activeWorkspace } = useServices();
 
   const [activeTask, setActiveTask] = useState<Task>();
@@ -53,7 +59,7 @@ export default function tasks() {
                   style={{
                     marginTop: 10,
                     height: 150,
-                    width: "49%",
+                    width: taskDisplay === "one" ? "100%" : "49%",
                     backgroundColor:
                       activeTask === widget
                         ? "#3E6FBC"
