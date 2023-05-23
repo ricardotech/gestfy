@@ -29,6 +29,7 @@ export default function HomeScreen() {
     user,
     api,
     signOut,
+    actualDate,
     activeDate,
     setActiveDate,
     getWorkspaces,
@@ -59,7 +60,7 @@ export default function HomeScreen() {
 
     const listaDatas = [];
 
-    listaDatas.push(activeDate);
+    listaDatas.push(actualDate);
 
     for (let i = 0; i < 14; i++) {
       const data = {
@@ -129,10 +130,8 @@ export default function HomeScreen() {
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        console.log("activeworkspaces", activeWorkspace);
         if (activeWorkspace) {
           getTasks(String(activeWorkspace._id)).then((tasks) => {
-            console.log("tasks", tasks);
             setLoading(false);
           });
         } else {

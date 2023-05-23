@@ -66,6 +66,15 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const actualDate = {
+    day: moment().format("DD"),
+    month: moment().format("MM"),
+    year: moment().format("YYYY"),
+    weekDayAbr: moment().format("ddd"),
+    weekDay: moment().format("dddd"),
+  };
   const [activeDate, setActiveDate] = useState<DateObj>({
     day: moment().format("DD"),
     month: moment().format("MM"),
@@ -73,7 +82,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
     weekDayAbr: moment().format("ddd"),
     weekDay: moment().format("dddd"),
   });
-  const [tasks, setTasks] = useState<Task[]>([]);
 
   async function loadStoragedData() {
     const storagedUser = await AsyncStorage.getItem(USER);
@@ -129,7 +137,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
     await handleApi();
     const res = api.post("/workspaces", workspace).then((res) => {
       setWorkspaces([...workspaces, workspace]);
-      return res.data
+      return res.data;
     });
     return res;
   };
@@ -295,6 +303,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
         activeWorkspace,
         addTask,
         removerTask,
+        actualDate,
         activeDate,
         setActiveDate,
       }}
