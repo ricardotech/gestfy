@@ -200,7 +200,12 @@ export default function HomeScreen() {
             >
               <Text
                 style={{
-                  color: activeDate.day === item.day ? "#FFF" : "#999",
+                  color:
+                    actualDate.day === item.day
+                      ? "#5E8FEE"
+                      : activeDate.day === item.day
+                      ? "#FFF"
+                      : "#999",
                   fontSize: 16,
                 }}
               >
@@ -208,7 +213,12 @@ export default function HomeScreen() {
               </Text>
               <Text
                 style={{
-                  color: activeDate.day === item.day ? "#FFF" : "#999",
+                  color:
+                    actualDate.day === item.day
+                      ? "#5E8FEE"
+                      : activeDate.day === item.day
+                      ? "#FFF"
+                      : "#999",
                   fontSize: 16,
                   fontWeight: "bold",
                 }}
