@@ -103,7 +103,6 @@ export default function Ellipsis({ closeModal }: { closeModal: () => void }) {
             onPress={async () => {
               handleApi();
               const res = await api.post("/workspaces/all");
-              console.log(res.data);
             }}
             icon={<Ionicons name="trash" color="#EEE" size={20} />}
           />

@@ -74,6 +74,7 @@ export type ContextData = {
   activeWorkspace: Workspace | undefined | null;
   setActiveWorkspace: (workspace: Workspace) => Promise<void>;
   activeDate: DateObj;
+  actualDate: DateObj;
   setActiveDate: React.Dispatch<React.SetStateAction<DateObj>>;
   addWorkspace: (workspace: Workspace) => Promise<Workspace>
 };
