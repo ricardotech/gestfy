@@ -26,7 +26,7 @@ export default function WorkspaceAdd({
   const {
     user,
     api,
-    adicionarWorkspace,
+    addWorkspace,
     workspaces,
     activeWorkspace,
     setActiveWorkspace,
@@ -97,7 +97,7 @@ export default function WorkspaceAdd({
       </View>
       <TouchableOpacity
         onPress={() => {
-          adicionarWorkspace({
+          addWorkspace({
             name,
           });
           setPopoverShown(false);

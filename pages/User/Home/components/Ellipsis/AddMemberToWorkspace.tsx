@@ -72,8 +72,11 @@ export default function AddMemberToWorkspace({
             setEmail(e);
           }}
           value={email}
-          keyboardType="ascii-capable"
           autoCorrect={false}
+          contextMenuHidden
+          autoCapitalize="none"
+          spellCheck={false}
+          keyboardType="ascii-capable"
           placeholderTextColor="#AAA"
           placeholder="Email do convidado"
           style={{

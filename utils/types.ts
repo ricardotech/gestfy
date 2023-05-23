@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 export type Task = {
   _id?: string;
   workspaceId: string;
+  name: string;
   description: string;
   priority: "High" | "Medium" | "Low";
   team?: string;
@@ -14,7 +15,7 @@ export type Task = {
 };
 
 export type Workspace = {
-  _id: string;
+  _id?: string;
   name: string;
   //   creatorId: string;
 };
@@ -64,13 +65,25 @@ export type ContextData = {
   tasks: Task[] | undefined | null;
   addTask: (task: Task) => void;
   removerTask: (taskId: string) => void;
+  updateTask: (id: string, taskData: any) => void;
   getWorkspaces: () => Promise<Workspace[]>;
+  getTask: (id: string) => Promise<Task>;
   getTasks: (workspaceId: string) => Promise<Task[]>;
   getActiveWorkspace: (workspaces: Workspace[]) => Promise<Workspace>;
   workspaces: Workspace[] | undefined | null;
   activeWorkspace: Workspace | undefined | null;
   setActiveWorkspace: (workspace: Workspace) => Promise<void>;
-  addWorkspace: (workspace: Workspace) => Promise<void>;
+  activeDate: DateObj;
+  setActiveDate: React.Dispatch<React.SetStateAction<DateObj>>;
+  addWorkspace: (workspace: Workspace) => Promise<Workspace>
+};
+
+export type DateObj = {
+  day: string;
+  month: string;
+  year: string;
+  weekDayAbr: string;
+  weekDay: string;
 };
 
 export type ContextProviderProps = {

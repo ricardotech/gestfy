@@ -76,6 +76,7 @@ export default function Workspace({
           style={{
             backgroundColor: "#3E6FBC",
           }}
+          size="lg"
           textStyle={{
             fontSize: 16,
             color: "#FFF",
@@ -90,18 +91,11 @@ export default function Workspace({
           <Text
             style={{
               color: "#FFF",
-              fontSize: 16,
+              fontSize: 18,
               fontFamily: "Poppins_700Bold",
             }}
           >
             {activeWorkspace?.name}
-          </Text>
-          <Text
-            style={{
-              color: "#EEE",
-            }}
-          >
-            {user?.name}
           </Text>
         </View>
       </TouchableOpacity>

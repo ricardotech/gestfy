@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: "Membros",
-    slug: "membros",
+    name: "Gestfy",
+    slug: "Gestfy",
     version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",

@@ -10,7 +10,13 @@ import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
 
-export default function tasks() {
+export default function Tasks({
+  taskDisplay,
+  setTaskDisplay,
+}: {
+  taskDisplay: "one" | "two";
+  setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
+}) {
   const { tasks, activeWorkspace } = useServices();
 
   const [activeTask, setActiveTask] = useState<Task>();
@@ -34,20 +40,34 @@ export default function tasks() {
             if (widget.workspaceId === activeWorkspace?._id)
               return (
                 <Pressable
+                  onPress={() => {
+                    navigation.navigate(
+                      "Task" as never,
+                      {
+                        id: widget._id,
+                      } as never
+                    );
+                  }}
                   onLongPress={() => {
                     setActiveTask(widget);
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
                     setTimeout(() => {
                       setActiveTask(undefined);
-                    }, 2000);
+                    }, 2500);
                   }}
                   key={i}
                   style={{
                     marginTop: 10,
                     height: 150,
-                    width: "49%",
+                    width: taskDisplay === "one" ? "100%" : "49%",
                     backgroundColor:
-                      activeTask === widget ? "rgba(255, 75, 75, 1)" : "#444",
+                      activeTask === widget
+                        ? "#3E6FBC"
+                        : widget.priority === "High"
+                        ? "rgba(255, 55, 55, 0.4)"
+                        : widget.priority === "Medium"
+                        ? "rgba(255, 155, 55, 0.5)"
+                        : "#333",
                     borderRadius: 10,
                     padding: 10,
                     justifyContent: "space-between",
@@ -63,7 +83,7 @@ export default function tasks() {
                         alignItems: "center",
                       }}
                     >
-                      <Ionicons name="trash" color="#FFF" size={30} />
+                      <Ionicons name="checkbox" color="#FFF" size={40} />
                     </View>
                   ) : (
                     <View>
@@ -85,46 +105,6 @@ export default function tasks() {
                         >
                           {widget.description}
                         </Text>
-                      </View>
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color:
-                              widget.priority === "High"
-                                ? "rgba(255, 75, 75, 0.9)"
-                                : widget.priority === "Medium"
-                                ? "orange"
-                                : "#FFF",
-                            fontSize: 18,
-                            fontFamily: "Poppins_400Regular",
-                            marginRight: 10,
-                          }}
-                        >
-                          {widget.priority}
-                        </Text>
-                        <Ionicons
-                          size={20}
-                          color={
-                            widget.priority === "High"
-                              ? "rgba(255, 75, 75, 0.9)"
-                              : widget.priority === "Medium"
-                              ? "orange"
-                              : "#FFF"
-                          }
-                          name={
-                            widget.priority === "High"
-                              ? "warning"
-                              : widget.priority === "Medium"
-                              ? "alert-circle"
-                              : "checkbox"
-                          }
-                        />
                       </View>
                     </View>
                   )}

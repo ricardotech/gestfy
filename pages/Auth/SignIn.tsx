@@ -8,6 +8,7 @@ import {
   Text,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { useServices } from "../../contexts/Services";
@@ -26,7 +27,10 @@ export default function SignIn() {
   let dropDownAlertRef: any = useRef();
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#000" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View
         style={{
           flex: 1,
@@ -216,7 +220,7 @@ export default function SignIn() {
                     navigation.navigate("SignUp" as never);
                   }}
                   style={{
-                    marginBottom: 10,
+                    marginBottom: Platform.OS === "android" ? 56 : 10,
                     height: 45,
                     width: "100%",
                     display: "flex",

@@ -11,6 +11,7 @@ import axios, { Axios, AxiosInstance, AxiosStatic } from "axios";
 import {
   ContextData,
   ContextProviderProps,
+  DateObj,
   SignInCredentials,
   SignUpCredentials,
   Task,
@@ -18,6 +19,7 @@ import {
   Workspace,
 } from "../utils/types";
 import validator from "email-validator";
+import moment from "moment";
 
 export const USER = "@Auth:user";
 export const TOKEN = "@Auth:token";
@@ -30,8 +32,7 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL =
-  "https://4c5a-2804-14c-3f89-8904-473-e98a-ecb8-8361.ngrok-free.app";
+const API_URL = "https://d73c-181-223-249-68.ngrok-free.app";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {
@@ -65,6 +66,13 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
+  const [activeDate, setActiveDate] = useState<DateObj>({
+    day: moment().format("DD"),
+    month: moment().format("MM"),
+    year: moment().format("YYYY"),
+    weekDayAbr: moment().format("ddd"),
+    weekDay: moment().format("dddd"),
+  });
   const [tasks, setTasks] = useState<Task[]>([]);
 
   async function loadStoragedData() {
@@ -76,10 +84,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
     }
   }
 
-  useEffect(() => {
-    loadStoragedData();
-  }, []);
-
   const addTask = async (task: Task) => {
     await handleApi();
     api.post("/tasks", task).then((res) => {
@@ -87,22 +91,47 @@ function ServicesProvider({ children }: ContextProviderProps) {
     });
   };
 
+  const getTask = async (id: string) => {
+    await handleApi();
+    const task = api.get(`/tasks/${id}`).then((res) => {
+      return res.data;
+    });
+    return task;
+  };
+
+  const updateTask = async (id: string, taskData: any) => {
+    await handleApi();
+
+    try {
+      const updatedTask = await api.put(`/tasks/${id}`, taskData);
+      const updatedTasks = tasks.map((task) => {
+        if (task._id === id) {
+          return updatedTask.data;
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const setActiveWorkspace = async (workspace: Workspace | undefined) => {
     if (workspace === undefined) {
       await AsyncStorage.removeItem(ACTIVEWORKSPACE);
     } else {
-      await AsyncStorage.setItem(ACTIVEWORKSPACE, workspace._id);
+      await AsyncStorage.setItem(ACTIVEWORKSPACE, String(workspace._id));
       setActiveWorkspaceState(workspace);
     }
   };
 
   const addWorkspace = async (workspace: Workspace) => {
     await handleApi();
-    api.post("/workspaces", workspace).then((res) => {
-      console.log(res);
-
-      getWorkspaces();
+    const res = api.post("/workspaces", workspace).then((res) => {
+      setWorkspaces([...workspaces, workspace]);
+      return res.data
     });
+    return res;
   };
 
   const getTasks = async (workspaceId: string): Promise<Task[]> => {
@@ -140,6 +169,10 @@ function ServicesProvider({ children }: ContextProviderProps) {
   const removerTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task._id !== taskId));
   };
+
+  useEffect(() => {
+    loadStoragedData();
+  }, []);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -252,7 +285,9 @@ function ServicesProvider({ children }: ContextProviderProps) {
         api,
         workspaces,
         tasks,
+        getTask,
         getTasks,
+        updateTask,
         getWorkspaces,
         getActiveWorkspace,
         addWorkspace,
@@ -260,6 +295,8 @@ function ServicesProvider({ children }: ContextProviderProps) {
         activeWorkspace,
         addTask,
         removerTask,
+        activeDate,
+        setActiveDate,
       }}
     >
       {children}

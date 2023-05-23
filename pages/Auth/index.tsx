@@ -26,7 +26,7 @@ export default function Auth() {
     >
       <View
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
           height: "100%",
           width: "100%",
           paddingHorizontal: 20,
@@ -69,7 +69,7 @@ export default function Auth() {
                   textAlign: "center",
                 }}
               >
-                Gerenciador de projetos
+                Gerenciador de tarefas
               </Text>
             </View>
             <View
@@ -85,7 +85,7 @@ export default function Auth() {
                 }}
                 style={{
                   height: 45,
-                  width: "49%",
+                  width: "48%",
                   backgroundColor: "#FFF",
                   display: "flex",
                   justifyContent: "center",
@@ -108,8 +108,8 @@ export default function Auth() {
                 }}
                 style={{
                   height: 45,
-                  width: "49%",
-                  backgroundColor: "#92312b",
+                  width: "48%",
+                  backgroundColor: "#3E6FBC",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",

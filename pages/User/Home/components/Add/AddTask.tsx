@@ -104,6 +104,7 @@ export default function AddWidget({
             activeWidgetTab === "Widget"
               ? setActiveTab("Widget")
               : setActiveWidgetTab("Widget");
+              closeModal();
           }}
         >
           <Text

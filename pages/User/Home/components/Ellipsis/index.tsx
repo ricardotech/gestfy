@@ -3,11 +3,11 @@ import { TouchableOpacity } from "react-native";
 import { Platform, Text, View } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-design-system";
-import { useServices } from "../../../../../contexts/Services";
+import { handleApi, useServices } from "../../../../../contexts/Services";
 import AddMemberToWorkspace from "./AddMemberToWorkspace";
 
-export default function Ellipsis() {
-  const { signOut } = useServices();
+export default function Ellipsis({ closeModal }: { closeModal: () => void }) {
+  const { signOut, api } = useServices();
 
   const [tab, setTab] = useState<"list" | "addMemberToWorkspace">("list");
 
@@ -26,8 +26,6 @@ export default function Ellipsis() {
         style={{
           paddingVertical: 15,
           paddingHorizontal: 20,
-          borderBottomWidth: 1,
-          borderBottomColor: "rgba(255, 255, 255, 0.05)",
           alignItems: "center",
           display: "flex",
           flexDirection: "row",
@@ -59,13 +57,55 @@ export default function Ellipsis() {
       }}
     >
       {tab === "list" && (
-        <View>
+        <View
+          style={{
+            paddingTop: 10,
+          }}
+        >
+          {Platform.OS === "android" && (
+            <View
+              style={{
+                paddingHorizontal: 20,
+                height: 40,
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  closeModal();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#3E6FBC",
+                    fontWeight: "bold",
+                    fontSize: 16,
+                  }}
+                >
+                  Voltar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <Item
             name="Adicionar membro ao workspace"
             onPress={() => setTab("addMemberToWorkspace")}
             icon={
               <MaterialIcons name="person-add-alt-1" color="#EEE" size={20} />
             }
+          />
+          <Item
+            name="Deletar todos workspaces"
+            onPress={async () => {
+              handleApi();
+              const res = await api.post("/workspaces/all");
+              console.log(res.data);
+            }}
+            icon={<Ionicons name="trash" color="#EEE" size={20} />}
           />
           <Item
             name="Sair da sua conta"

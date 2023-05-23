@@ -15,7 +15,7 @@ export default function Routes() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 10);
+    }, 100);
   }, []);
 
   if (loading) return <Loading />;
