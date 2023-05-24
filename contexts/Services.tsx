@@ -66,6 +66,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
+  const [activeWorkspaceMembers, setActiveWorkspaceMembers] = useState<any[]>();
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const actualDate = {
@@ -128,6 +129,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
     if (workspace === undefined) {
       await AsyncStorage.removeItem(ACTIVEWORKSPACE);
     } else {
+      getTasks(String(workspace._id));
       await AsyncStorage.setItem(ACTIVEWORKSPACE, String(workspace._id));
       setActiveWorkspaceState(workspace);
     }
@@ -144,7 +146,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const getTasks = async (workspaceId: string): Promise<Task[]> => {
     await handleApi();
-    const res = await api.get(`/tasks`);
+    const res = await api.get(`/tasks/workspace/${workspaceId}`);
     setTasks(res.data);
 
     return res.data;
@@ -184,7 +186,48 @@ function ServicesProvider({ children }: ContextProviderProps) {
     return members;
   };
 
-  const removerTask = (taskId: string) => {
+  const addMemberToWorkspace = async (
+    workspaceId: string,
+    memberToAddEmail: string
+  ) => {
+    await handleApi();
+    const res = api
+      .post(`/workspaces/membership/${workspaceId}`, {
+        memberEmail: memberToAddEmail,
+      })
+      .then((res) => {
+        return res.data;
+      });
+    return res;
+  };
+
+  const getPendingInvitationsWorkspace = async () => {
+    await handleApi();
+    const res = api.get(`/workspaces/membership/pending`).then((res) => {
+      return res.data;
+    });
+    return res;
+  };
+
+  const acceptInvitationWorkspace = async (workspaceId: string) => {
+    const res = await api
+      .post(`/workspaces/membership/${workspaceId}/accept`)
+      .then((res) => {
+        return res.data;
+      });
+    return res;
+  };
+
+  const declineInvitationWorkspace = async (workspaceId: string) => {
+    const res = await api
+      .post(`/workspaces/membership/${workspaceId}/decline`)
+      .then((res) => {
+        return res.data;
+      });
+    return res;
+  };
+
+  const deleteTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task._id !== taskId));
   };
 
@@ -294,26 +337,30 @@ function ServicesProvider({ children }: ContextProviderProps) {
   return (
     <ServicesContext.Provider
       value={{
-        token,
+        api,
         user,
+        token,
         signIn,
         signUp,
         signOut,
         isLoading,
-        api,
         workspaces,
         tasks,
+        addTask,
         getTask,
         getTasks,
+        deleteTask,
         updateTask,
+        addWorkspace,
         getWorkspaces,
         getActiveWorkspace,
-        addWorkspace,
         setActiveWorkspace,
         activeWorkspace,
+        getPendingInvitationsWorkspace,
         getActiveWorkspaceMembers,
-        addTask,
-        removerTask,
+        addMemberToWorkspace,
+        acceptInvitationWorkspace,
+        declineInvitationWorkspace,
         actualDate,
         activeDate,
         setActiveDate,

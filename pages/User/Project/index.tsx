@@ -87,7 +87,7 @@ export default function ProjectScreen({
   return (
     <View
       style={{
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         height: "100%",
         width: "100%",
       }}

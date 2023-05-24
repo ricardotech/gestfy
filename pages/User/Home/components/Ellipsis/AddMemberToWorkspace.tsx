@@ -8,7 +8,7 @@ import { useServices } from "../../../../../contexts/Services";
 export default function AddMemberToWorkspace({
   setTab,
 }: {
-  setTab: React.Dispatch<React.SetStateAction<"list" | "addMemberToWorkspace">>;
+  setTab: React.Dispatch<React.SetStateAction<"list" | "addMemberToWorkspace" | "pendingInvitations">>;
 }) {
   const [email, setEmail] = React.useState("");
 
@@ -24,20 +24,7 @@ export default function AddMemberToWorkspace({
           paddingHorizontal: 20,
         }}
       >
-        <TouchableOpacity
-          onPress={() => setTab("list")}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 30,
-            width: 30,
-            borderRadius: 8,
-            backgroundColor: "#333",
-          }}
-        >
-          <Ionicons name="chevron-back" color="#FFF" size={20} />
-        </TouchableOpacity>
+     
         <View>
           <Text
             style={{
@@ -59,6 +46,20 @@ export default function AddMemberToWorkspace({
             {activeWorkspace?.name}
           </Text>
         </View>
+        <TouchableOpacity
+          onPress={() => setTab("list")}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 30,
+            width: 30,
+            borderRadius: 8,
+            backgroundColor: "#333",
+          }}
+        >
+          <Ionicons name="close" color="#FFF" size={20} />
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -72,11 +73,6 @@ export default function AddMemberToWorkspace({
             setEmail(e);
           }}
           value={email}
-          autoCorrect={false}
-          contextMenuHidden
-          autoCapitalize="none"
-          spellCheck={false}
-          keyboardType="ascii-capable"
           placeholderTextColor="#AAA"
           placeholder="Email do convidado"
           style={{
@@ -90,51 +86,55 @@ export default function AddMemberToWorkspace({
           }}
         />
       </View>
-      <TouchableOpacity
-        onPress={() => {}}
+      <View
         style={{
-          paddingBottom: 15,
-          marginTop: 10,
-          backgroundColor: validator.validate(email) ? "#3E6FBC" : "#333",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          paddingHorizontal: 20,
+          paddingBottom: 20,
         }}
       >
-        <View
+        <TouchableOpacity
+          onPress={() => {}}
           style={{
-            paddingVertical: 10,
-            paddingHorizontal: 20,
+            borderRadius: 10,
+            backgroundColor: validator.validate(email) ? "#3E6FBC" : "#333",
             display: "flex",
             flexDirection: "row",
-            width: "100%",
-            alignItems: "center",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Text
-            style={{
-              color: "#FFF",
-              marginLeft: 10,
-              fontWeight: "bold",
-            }}
-          >
-            Convidar membro
-          </Text>
           <View
             style={{
-              width: 30,
-              height: 30,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "row",
+              width: "100%",
               alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <MaterialIcons name="person-add-alt-1" color="#FFF" size={20} />
+            <Text
+              style={{
+                color: "#999",
+              }}
+            >
+              Convidar membro
+            </Text>
+            <View
+              style={{
+                width: 30,
+                height: 30,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MaterialIcons name="person-add-alt-1" color="#999" size={20} />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

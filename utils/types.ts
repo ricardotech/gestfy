@@ -17,6 +17,7 @@ export type Task = {
 export type Workspace = {
   _id?: string;
   name: string;
+  membersIds?: string[];
   //   creatorId: string;
 };
 
@@ -64,7 +65,7 @@ export type ContextData = {
   api: AxiosInstance;
   tasks: Task[] | undefined | null;
   addTask: (task: Task) => void;
-  removerTask: (taskId: string) => void;
+  deleteTask: (taskId: string) => void;
   updateTask: (id: string, taskData: any) => void;
   getWorkspaces: () => Promise<Workspace[]>;
   getTask: (id: string) => Promise<Task>;
@@ -72,8 +73,15 @@ export type ContextData = {
   getActiveWorkspace: (workspaces: Workspace[]) => Promise<Workspace>;
   workspaces: Workspace[] | undefined | null;
   activeWorkspace: Workspace | undefined | null;
+  addMemberToWorkspace: (
+    workspaceId: string,
+    memberToAddEmail: string
+  ) => Promise<any>;
+  getPendingInvitationsWorkspace: () => Promise<any>;
   getActiveWorkspaceMembers: (workspaceId: string) => Promise<User[]>;
   setActiveWorkspace: (workspace: Workspace) => Promise<void>;
+  acceptInvitationWorkspace: (workspaceId: string) => Promise<any>;
+  declineInvitationWorkspace: (workspaceId: string) => Promise<any>;
   activeDate: DateObj;
   actualDate: DateObj;
   setActiveDate: React.Dispatch<React.SetStateAction<DateObj>>;

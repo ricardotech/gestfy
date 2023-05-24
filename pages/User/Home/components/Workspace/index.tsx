@@ -49,7 +49,7 @@ export default function Workspace({
         display: "flex",
         flexDirection: "row",
         width: "100%",
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         borderBottomWidth: 1,
         borderBottomColor: "#2F2F2F",
         borderBottomRightRadius: 0,
@@ -121,7 +121,7 @@ export default function Workspace({
           backgroundColor: "rgba(0, 0, 0, 0.9)",
         }}
         popoverStyle={{
-          backgroundColor: "#202123",
+          backgroundColor: "#191919",
           width: 300,
           borderRadius: 8,
         }}

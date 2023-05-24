@@ -48,10 +48,10 @@ export default function AddTask({
       <Pressable
         onPress={() => {
           addTask({
-            name: name,
-            description: description,
+            name: "",
+            description: name,
             workspaceId: String(activeWorkspace?._id),
-            priority: priority ? priority : "Low",
+            priority: priority ? priority : "High",
           });
           closeModal();
         }}
@@ -121,7 +121,7 @@ export default function AddTask({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         width: "100%",
-        backgroundColor: "#202123",
+        backgroundColor: "#191919",
         paddingHorizontal: 20,
         paddingBottom: Platform.OS === "ios" ? 25 : 20,
       }}

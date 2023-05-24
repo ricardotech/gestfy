@@ -8,7 +8,7 @@ export default function Loading() {
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         display: "flex",
         padding: 20,
         paddingTop: 25,

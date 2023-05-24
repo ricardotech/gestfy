@@ -11,13 +11,15 @@ import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Tasks({
+  tasks,
   taskDisplay,
   setTaskDisplay,
 }: {
+  tasks: Task[];
   taskDisplay: "one" | "two";
   setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
 }) {
-  const { tasks, activeWorkspace } = useServices();
+  const { activeWorkspace } = useServices();
 
   const [activeTask, setActiveTask] = useState<Task>();
 

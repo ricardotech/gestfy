@@ -7,6 +7,7 @@ import {
   RefreshControl,
   ScrollView,
   FlatList,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
@@ -21,7 +22,11 @@ import Ellipsis from "./components/Ellipsis";
 import Loading from "../../Loading";
 import moment from "moment";
 import "moment/locale/pt-br"; // Importe o locale para português do Brasil
-import { DateObj, Workspace as WorkspaceType } from "../../../utils/types";
+import {
+  DateObj,
+  Task,
+  Workspace as WorkspaceType,
+} from "../../../utils/types";
 import CreateWorkspace from "./components/CreateWorkspace";
 
 export default function HomeScreen() {
@@ -34,9 +39,8 @@ export default function HomeScreen() {
     setActiveDate,
     getWorkspaces,
     getActiveWorkspace,
-    getTasks,
-    getActiveWorkspaceMembers,
     tasks,
+    getActiveWorkspaceMembers,
   } = useServices();
 
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([]);
@@ -94,16 +98,17 @@ export default function HomeScreen() {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
+      setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        console.log("members0:");
-        getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
-          (members) => {
-            console.log("members:", members);
-            getTasks(String(activeWorkspace._id)).then((tasks) => {
-              setLoading(false);
-            });
-          }
-        );
+        activeWorkspace
+          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+              (members) => {
+                setMembers(members);
+
+                setLoading(false);
+              }
+            )
+          : setLoading(false);
       });
     });
     setRefreshing(false);
@@ -138,14 +143,14 @@ export default function HomeScreen() {
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
-          (members) => {
-            setMembers(members);
-            getTasks(String(activeWorkspace._id)).then((tasks) => {
-              setLoading(false);
-            });
-          }
-        );
+        activeWorkspace
+          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+              (members) => {
+                setMembers(members);
+                setLoading(false);
+              }
+            )
+          : setLoading(false);
       });
     });
   }, []);
@@ -166,7 +171,7 @@ export default function HomeScreen() {
   return (
     <View
       style={{
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         height: "100%",
         width: "100%",
       }}
@@ -186,7 +191,8 @@ export default function HomeScreen() {
           alignItems: "center",
         }}
         style={{
-          paddingHorizontal: 20,
+          padding: 20,
+          height: Platform.OS === "ios" ? 80 : 110,
         }}
         renderItem={({ item, index }) => (
           <TouchableOpacity
@@ -248,6 +254,9 @@ export default function HomeScreen() {
         showsHorizontalScrollIndicator={false}
       />
       <ScrollView
+        style={{
+          height: "100%",
+        }}
         refreshControl={
           <RefreshControl
             tintColor="#BBB"
@@ -256,7 +265,11 @@ export default function HomeScreen() {
           />
         }
       >
-        <Widgets taskDisplay={taskDisplay} setTaskDisplay={setTaskDisplay} />
+        <Widgets
+          tasks={tasks}
+          taskDisplay={taskDisplay}
+          setTaskDisplay={setTaskDisplay}
+        />
       </ScrollView>
       <BottomTab
         taskDisplay={taskDisplay}
@@ -273,7 +286,7 @@ export default function HomeScreen() {
           backgroundColor: "#494949",
         }}
         modalStyle={{
-          backgroundColor: "#202123",
+          backgroundColor: "#191919",
         }}
         onClose={() => {
           setActiveTab("Home");

@@ -38,7 +38,7 @@ export default function Index() {
     <ThemeProvider theme={theme}>
       <View
         style={{
-          backgroundColor: "#202123",
+          backgroundColor: "#000",
           height: "100%",
           width: "100%",
         }}
