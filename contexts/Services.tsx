@@ -32,7 +32,7 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL = "https://d73c-181-223-249-68.ngrok-free.app";
+const API_URL = "https://7fa9-181-223-249-68.ngrok-free.app";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {
@@ -174,6 +174,16 @@ function ServicesProvider({ children }: ContextProviderProps) {
     }
   };
 
+  const getActiveWorkspaceMembers = async (workspaceId: string) => {
+    await handleApi();
+    const members: User[] = await api
+      .get(`/workspaces/${workspaceId}/members`)
+      .then((res) => {
+        return res.data;
+      });
+    return members;
+  };
+
   const removerTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task._id !== taskId));
   };
@@ -301,6 +311,7 @@ function ServicesProvider({ children }: ContextProviderProps) {
         addWorkspace,
         setActiveWorkspace,
         activeWorkspace,
+        getActiveWorkspaceMembers,
         addTask,
         removerTask,
         actualDate,

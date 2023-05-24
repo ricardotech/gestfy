@@ -7,15 +7,18 @@ import {
   Platform,
   TouchableOpacity,
   TextInput,
+  FlatList,
+  ScrollView,
 } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Haptics from "expo-haptics";
 import { useServices } from "../../../../../contexts/Services";
+import { Avatar } from "react-native-design-system";
 
-export default function AddWidget({
+export default function AddTask({
   activeTab,
   setActiveTab,
   closeModal,
@@ -31,9 +34,10 @@ export default function AddWidget({
   const navigation = useNavigation();
 
   const [activeWidgetTab, setActiveWidgetTab] = React.useState<
-    "Widget" | "Projetos" | "Tarefas" | "Workspaces"
+    "Widget" | "Assignee" | "DueDate"
   >("Widget");
 
+  const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
   const [activeProject, setActiveProject] = React.useState<string>("");
   const [activeTask, setActiveTask] = React.useState<string>("");
@@ -44,6 +48,7 @@ export default function AddWidget({
       <Pressable
         onPress={() => {
           addTask({
+            name: name,
             description: description,
             workspaceId: String(activeWorkspace?._id),
             priority: priority ? priority : "Low",
@@ -51,8 +56,7 @@ export default function AddWidget({
           closeModal();
         }}
         style={{
-          backgroundColor:
-            description.length > 5 && priority ? "#3C7BFA" : "#333",
+          backgroundColor: name.length > 5 ? "#3C7BFA" : "#333",
           marginTop: 20,
           height: 50,
           width: "100%",
@@ -67,12 +71,45 @@ export default function AddWidget({
             fontSize: 16,
             color: "#FFF",
             fontFamily:
-              description.length > 5 && priority
+              name.length > 5 && priority
                 ? "Poppins_700Bold"
                 : "Poppins_400Regular",
           }}
         >
           Adicionar
+        </Text>
+      </Pressable>
+    );
+  }
+
+  function Assignee({ name, avatar }: { name: string; avatar: string }) {
+    return (
+      <Pressable
+        style={{
+          height: 45,
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Avatar
+          style={{
+            borderRadius: 4,
+          }}
+          size="md"
+          source={{
+            uri: avatar,
+          }}
+        />
+        <Text
+          style={{
+            marginLeft: 10,
+            color: "#FFF",
+            fontSize: 16,
+          }}
+        >
+          {name}
         </Text>
       </Pressable>
     );
@@ -103,8 +140,10 @@ export default function AddWidget({
           onPress={() => {
             activeWidgetTab === "Widget"
               ? setActiveTab("Widget")
+              : activeWidgetTab === "Assignee"
+              ? setActiveWidgetTab("Widget")
               : setActiveWidgetTab("Widget");
-              closeModal();
+            closeModal();
           }}
         >
           <Text
@@ -120,20 +159,12 @@ export default function AddWidget({
       </View>
       {activeWidgetTab === "Widget" && (
         <View>
-          <Text
-            style={{
-              color: "#FFF",
-              fontSize: 16,
-              fontFamily: "Poppins_400Regular",
-            }}
-          >
-            Descrição
-          </Text>
           <TextInput
+            placeholder="Nome da tarefa"
             onChangeText={(e) => {
-              setDescription(e);
+              setName(e);
             }}
-            value={description}
+            value={name}
             autoComplete="off"
             placeholderTextColor="#AAA"
             style={{
@@ -147,16 +178,6 @@ export default function AddWidget({
               paddingHorizontal: 15,
             }}
           />
-          <Text
-            style={{
-              fontSize: 16,
-              marginTop: 20,
-              color: "#FFF",
-              fontFamily: "Poppins_400Regular",
-            }}
-          >
-            Prioridade
-          </Text>
           <View
             style={{
               display: "flex",
@@ -169,14 +190,12 @@ export default function AddWidget({
             <Pressable
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setTimeout(() => {
-                  setPriority("High");
-                }, 150);
+                setActiveWidgetTab("Assignee");
               }}
               style={{
                 justifyContent: "center",
                 height: 50,
-                width: "32%",
+                width: "49%",
                 borderRadius: 10,
                 backgroundColor: "#333",
                 paddingHorizontal: 10,
@@ -192,10 +211,10 @@ export default function AddWidget({
                   marginRight: 10,
                 }}
               >
-                Alta
+                Assinar tarefa
               </Text>
-              <Ionicons
-                name="warning"
+              <MaterialIcons
+                name="person"
                 color={priority === "High" ? "#CC3F30" : "#AAA"}
                 size={20}
               />
@@ -203,14 +222,12 @@ export default function AddWidget({
             <Pressable
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setTimeout(() => {
-                  setPriority("Medium");
-                }, 150);
+                setActiveWidgetTab("DueDate");
               }}
               style={{
                 justifyContent: "center",
                 height: 50,
-                width: "32%",
+                width: "49%",
                 borderRadius: 10,
                 backgroundColor: "#333",
                 paddingHorizontal: 10,
@@ -226,25 +243,61 @@ export default function AddWidget({
                   marginRight: 10,
                 }}
               >
-                Média
+                Data de entrega
               </Text>
-              <Ionicons
-                name="alert-circle"
+              <MaterialIcons
+                name="calendar-today"
                 color={priority === "Medium" ? "#878F54" : "#AAA"}
                 size={20}
               />
             </Pressable>
+          </View>
+        </View>
+      )}
+      {activeWidgetTab === "Assignee" && (
+        <View>
+          <ScrollView></ScrollView>
+        </View>
+      )}
+      {activeWidgetTab === "DueDate" && (
+        <View>
+          <TextInput
+            placeholder="Nome da tarefa"
+            onChangeText={(e) => {
+              setName(e);
+            }}
+            value={name}
+            autoComplete="off"
+            placeholderTextColor="#AAA"
+            style={{
+              fontSize: 16,
+              marginTop: 10,
+              height: 50,
+              width: "100%",
+              borderRadius: 10,
+              backgroundColor: "#333",
+              color: "#FFF",
+              paddingHorizontal: 15,
+            }}
+          />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
+          >
             <Pressable
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setTimeout(() => {
-                  setPriority("Low");
-                }, 150);
+                setActiveWidgetTab("Assignee");
               }}
               style={{
                 justifyContent: "center",
                 height: 50,
-                width: "32%",
+                width: "49%",
                 borderRadius: 10,
                 backgroundColor: "#333",
                 paddingHorizontal: 10,
@@ -255,16 +308,48 @@ export default function AddWidget({
             >
               <Text
                 style={{
-                  color: priority === "Low" ? "#42c952" : "#AAA",
+                  color: priority === "High" ? "#CC3F30" : "#AAA",
                   fontSize: 16,
                   marginRight: 10,
                 }}
               >
-                Baixa
+                Assinar tarefa
               </Text>
-              <Ionicons
-                name="checkbox"
-                color={priority === "Low" ? "#42c952" : "#AAA"}
+              <MaterialIcons
+                name="person"
+                color={priority === "High" ? "#CC3F30" : "#AAA"}
+                size={20}
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setActiveWidgetTab("DueDate");
+              }}
+              style={{
+                justifyContent: "center",
+                height: 50,
+                width: "49%",
+                borderRadius: 10,
+                backgroundColor: "#333",
+                paddingHorizontal: 10,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: priority === "Medium" ? "#878F54" : "#AAA",
+                  fontSize: 16,
+                  marginRight: 10,
+                }}
+              >
+                Data de entrega
+              </Text>
+              <MaterialIcons
+                name="calendar-today"
+                color={priority === "Medium" ? "#878F54" : "#AAA"}
                 size={20}
               />
             </Pressable>

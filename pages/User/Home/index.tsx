@@ -35,6 +35,7 @@ export default function HomeScreen() {
     getWorkspaces,
     getActiveWorkspace,
     getTasks,
+    getActiveWorkspaceMembers,
     tasks,
   } = useServices();
 
@@ -93,9 +94,14 @@ export default function HomeScreen() {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getTasks(String(activeWorkspace._id)).then((tasks) => {
-          setLoading(false);
-        });
+        getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+          (members) => {
+            console.log("members:", members);
+            getTasks(String(activeWorkspace._id)).then((tasks) => {
+              setLoading(false);
+            });
+          }
+        );
       });
     });
     setRefreshing(false);
@@ -128,15 +134,16 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getWorkspaces().then((workspaces) => {
-      setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        if (activeWorkspace) {
-          getTasks(String(activeWorkspace._id)).then((tasks) => {
-            setLoading(false);
-          });
-        } else {
-          setLoading(false);
-        }
+        console.log("members0:");
+        getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+          (members) => {
+            console.log("members:", members);
+            getTasks(String(activeWorkspace._id)).then((tasks) => {
+              setLoading(false);
+            });
+          }
+        );
       });
     });
   }, []);

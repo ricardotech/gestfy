@@ -5,7 +5,7 @@ export type Task = {
   _id?: string;
   workspaceId: string;
   name: string;
-  description: string;
+  description?: string;
   priority: "High" | "Medium" | "Low";
   team?: string;
   status?: "To Do" | "In Progress" | "Done";
@@ -72,11 +72,12 @@ export type ContextData = {
   getActiveWorkspace: (workspaces: Workspace[]) => Promise<Workspace>;
   workspaces: Workspace[] | undefined | null;
   activeWorkspace: Workspace | undefined | null;
+  getActiveWorkspaceMembers: (workspaceId: string) => Promise<User[]>;
   setActiveWorkspace: (workspace: Workspace) => Promise<void>;
   activeDate: DateObj;
   actualDate: DateObj;
   setActiveDate: React.Dispatch<React.SetStateAction<DateObj>>;
-  addWorkspace: (workspace: Workspace) => Promise<Workspace>
+  addWorkspace: (workspace: Workspace) => Promise<Workspace>;
 };
 
 export type DateObj = {
