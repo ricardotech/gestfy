@@ -9,7 +9,7 @@ export default {
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
-      backgroundColor: "#202123",
+      backgroundColor: "#000000",
     },
     plugins: [
       [

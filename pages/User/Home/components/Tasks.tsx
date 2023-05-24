@@ -11,20 +11,22 @@ import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Tasks({
+  tasks,
   taskDisplay,
   setTaskDisplay,
 }: {
+  tasks: Task[];
   taskDisplay: "one" | "two";
   setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
 }) {
-  const { tasks, activeWorkspace } = useServices();
+  const { activeWorkspace } = useServices();
 
   const [activeTask, setActiveTask] = useState<Task>();
 
   const navigation = useNavigation();
 
   return (
-    <View style={{ width: "100%", paddingHorizontal: 20, paddingVertical: 10 }}>
+    <View style={{ width: "100%", paddingHorizontal: 20 }}>
       <View
         style={{
           flexDirection: "row",
@@ -57,7 +59,7 @@ export default function Tasks({
                   }}
                   key={i}
                   style={{
-                    marginTop: 10,
+                    marginBottom: 10,
                     height: 150,
                     width: taskDisplay === "one" ? "100%" : "49%",
                     backgroundColor:

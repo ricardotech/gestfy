@@ -200,7 +200,7 @@ export default function AddSquad({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         width: "100%",
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         paddingHorizontal: 20,
         paddingBottom: Platform.OS === "ios" ? 25 : 20,
       }}

@@ -19,7 +19,7 @@ export default function Auth() {
       }}
       style={{
         flex: 1,
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         height: "100%",
         width: "100%",
       }}

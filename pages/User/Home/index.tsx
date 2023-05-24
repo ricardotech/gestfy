@@ -7,6 +7,7 @@ import {
   RefreshControl,
   ScrollView,
   FlatList,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
@@ -21,7 +22,11 @@ import Ellipsis from "./components/Ellipsis";
 import Loading from "../../Loading";
 import moment from "moment";
 import "moment/locale/pt-br"; // Importe o locale para português do Brasil
-import { DateObj, Workspace as WorkspaceType } from "../../../utils/types";
+import {
+  DateObj,
+  Task,
+  Workspace as WorkspaceType,
+} from "../../../utils/types";
 import CreateWorkspace from "./components/CreateWorkspace";
 
 export default function HomeScreen() {
@@ -34,11 +39,12 @@ export default function HomeScreen() {
     setActiveDate,
     getWorkspaces,
     getActiveWorkspace,
-    getTasks,
     tasks,
+    getActiveWorkspaceMembers,
   } = useServices();
 
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -92,10 +98,17 @@ export default function HomeScreen() {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
+      setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        getTasks(String(activeWorkspace._id)).then((tasks) => {
-          setLoading(false);
-        });
+        activeWorkspace
+          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+              (members) => {
+                setMembers(members);
+
+                setLoading(false);
+              }
+            )
+          : setLoading(false);
       });
     });
     setRefreshing(false);
@@ -130,13 +143,14 @@ export default function HomeScreen() {
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        if (activeWorkspace) {
-          getTasks(String(activeWorkspace._id)).then((tasks) => {
-            setLoading(false);
-          });
-        } else {
-          setLoading(false);
-        }
+        activeWorkspace
+          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
+              (members) => {
+                setMembers(members);
+                setLoading(false);
+              }
+            )
+          : setLoading(false);
       });
     });
   }, []);
@@ -157,7 +171,7 @@ export default function HomeScreen() {
   return (
     <View
       style={{
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
         height: "100%",
         width: "100%",
       }}
@@ -168,7 +182,81 @@ export default function HomeScreen() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
+      <FlatList
+        data={listaDatas}
+        ref={calendarRef}
+        contentContainerStyle={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        style={{
+          padding: 20,
+          height: Platform.OS === "ios" ? 80 : 110,
+        }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            onPress={() => {
+              setActiveDate(item);
+              calendarRef.current?.scrollToIndex({
+                index: index,
+                animated: true,
+              });
+            }}
+            key={index}
+            style={{ width: "auto", marginRight: 30 }}
+          >
+            <Text
+              style={{
+                color:
+                  actualDate.day === item.day
+                    ? "#5E8FEE"
+                    : activeDate.day === item.day
+                    ? "#FFF"
+                    : "#999",
+                fontSize: 16,
+                fontWeight: activeDate.day === item.day ? "bold" : "normal",
+              }}
+            >
+              {item.day}
+            </Text>
+            <Text
+              style={{
+                color:
+                  actualDate.day === item.day
+                    ? "#5E8FEE"
+                    : activeDate.day === item.day
+                    ? "#FFF"
+                    : "#999",
+                fontSize: 16,
+                fontWeight: activeDate.day === item.day ? "bold" : "normal",
+              }}
+            >
+              {item.weekDay === "terça-feira"
+                ? "Terça"
+                : item.weekDay === "quarta-feira"
+                ? "Quarta"
+                : item.weekDay === "quinta-feira"
+                ? "Quinta"
+                : item.weekDay === "sexta-feira"
+                ? "Sexta"
+                : item.weekDay === "sábado"
+                ? "Sábado"
+                : item.weekDay === "domingo"
+                ? "Domingo"
+                : item.weekDay === "segunda-feira"
+                ? "Segunda"
+                : item.weekDayAbr}
+            </Text>
+          </TouchableOpacity>
+        )}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      />
       <ScrollView
+        style={{
+          height: "100%",
+        }}
         refreshControl={
           <RefreshControl
             tintColor="#BBB"
@@ -177,76 +265,11 @@ export default function HomeScreen() {
           />
         }
       >
-        <FlatList
-          data={listaDatas}
-          ref={calendarRef}
-          style={{
-            height: 60,
-            paddingTop: 20,
-            paddingHorizontal: 20,
-            paddingBottom: 10,
-          }}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => {
-                setActiveDate(item);
-                calendarRef.current?.scrollToIndex({
-                  index: index,
-                  animated: true,
-                });
-              }}
-              key={index}
-              style={{ width: "auto", marginRight: 30 }}
-            >
-              <Text
-                style={{
-                  color:
-                    actualDate.day === item.day
-                      ? "#5E8FEE"
-                      : activeDate.day === item.day
-                      ? "#FFF"
-                      : "#999",
-                  fontSize: 16,
-                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
-                }}
-              >
-                {item.day}
-              </Text>
-              <Text
-                style={{
-                  color:
-                    actualDate.day === item.day
-                      ? "#5E8FEE"
-                      : activeDate.day === item.day
-                      ? "#FFF"
-                      : "#999",
-                  fontSize: 16,
-                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
-                }}
-              >
-                {item.weekDay === "terça-feira"
-                  ? "Terça"
-                  : item.weekDay === "quarta-feira"
-                  ? "Quarta"
-                  : item.weekDay === "quinta-feira"
-                  ? "Quinta"
-                  : item.weekDay === "sexta-feira"
-                  ? "Sexta"
-                  : item.weekDay === "sábado"
-                  ? "Sábado"
-                  : item.weekDay === "domingo"
-                  ? "Domingo"
-                  : item.weekDay === "segunda-feira"
-                  ? "Segunda"
-                  : item.weekDayAbr}
-              </Text>
-            </TouchableOpacity>
-          )}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
+        <Widgets
+          tasks={tasks}
+          taskDisplay={taskDisplay}
+          setTaskDisplay={setTaskDisplay}
         />
-
-        <Widgets taskDisplay={taskDisplay} setTaskDisplay={setTaskDisplay} />
       </ScrollView>
       <BottomTab
         taskDisplay={taskDisplay}
@@ -263,7 +286,7 @@ export default function HomeScreen() {
           backgroundColor: "#494949",
         }}
         modalStyle={{
-          backgroundColor: "#202123",
+          backgroundColor: "#191919",
         }}
         onClose={() => {
           setActiveTab("Home");

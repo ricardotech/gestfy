@@ -78,7 +78,7 @@ export default function TaskScreen({ route }: any) {
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: "#202123",
+        backgroundColor: "#000",
       }}
     >
       <SafeAreaView>
@@ -131,7 +131,7 @@ export default function TaskScreen({ route }: any) {
           backgroundColor: "#494949",
         }}
         modalStyle={{
-          backgroundColor: "#202123",
+          backgroundColor: "#000",
         }}
         onClose={() => {
           setActiveTab(undefined);
