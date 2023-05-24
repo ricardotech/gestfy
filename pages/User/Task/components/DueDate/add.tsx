@@ -14,6 +14,8 @@ import utc from "dayjs/plugin/utc";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 import { Calendar, LocaleConfig } from "react-native-calendars";
+import { useServices } from "../../../../../contexts/Services";
+import { Task } from "../../../../../utils/types";
 
 export default function AddDueDate({
   closeModal,
@@ -21,13 +23,18 @@ export default function AddDueDate({
   setActiveTab,
   dueDate,
   setDueDate,
+  task,
+  fetchTask,
 }: {
   closeModal: () => void;
   activeTab: string | undefined;
   setActiveTab: any;
   dueDate: any;
   setDueDate: any;
+  task: Task | undefined;
+  fetchTask: () => void;
 }) {
+  const { updateTask } = useServices();
   LocaleConfig.locales["pt"] = {
     monthNames: [
       "Janeiro",
@@ -142,12 +149,20 @@ export default function AddDueDate({
             selectedDayTextColor: "#FFF",
             selectedDayBackgroundColor: "#3E6FBC",
           }}
-          onDayPress={(day) => {
+          onDayPress={async (day) => {
+            await updateTask(String(task?._id), {
+              dueDate: day.dateString,
+            });
+            fetchTask();
             setDueDate(day.dateString);
             closeModal();
           }}
           markedDates={{
             [dueDate]: {
+              selected: true,
+              disableTouchEvent: true,
+            },
+            [String(task?.dueDate)]: {
               selected: true,
               disableTouchEvent: true,
             },

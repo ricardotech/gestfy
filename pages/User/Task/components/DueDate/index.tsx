@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { Task } from "../../../../../utils/types";
 
 export default function DueDate({
   openModal,
@@ -8,13 +9,21 @@ export default function DueDate({
   activeTab,
   setActiveTab,
   dueDate,
+  task,
+  fetchTask,
 }: {
   openModal: () => void;
   closeModal: () => void;
   activeTab: string | undefined;
   setActiveTab: any;
   dueDate: any;
+  task: Task | undefined;
+  fetchTask: () => void;
 }) {
+
+  const formattedDate = String(task?.dueDate).split("-").reverse().join("-");
+  const formattedDueDate = String(dueDate).split("-").reverse().join("-");
+
   return (
     <View
       style={{
@@ -58,7 +67,11 @@ export default function DueDate({
             marginRight: 10,
           }}
         >
-          {dueDate ? String(dueDate) : "Adicionar data "}
+          {task?.dueDate
+            ? formattedDate
+            : formattedDueDate
+            ? String(dueDate)
+            : "Adicionar data "}
         </Text>
       </TouchableOpacity>
     </View>

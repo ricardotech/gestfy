@@ -61,9 +61,13 @@ export default function TaskScreen({ route }: any) {
     }
   }
 
-  async function load() {
+  async function fetchTask() {
     const task = await getTask(id);
     setTask(task);
+  }
+
+  async function load() {
+    fetchTask();
     setLoading(false);
   }
 
@@ -105,6 +109,8 @@ export default function TaskScreen({ route }: any) {
             />
             {task && <Priority task={task} />}
             <DueDate
+              task={task}
+              fetchTask={fetchTask}
               dueDate={dueDate}
               openModal={openModal}
               closeModal={closeModal}
@@ -139,6 +145,8 @@ export default function TaskScreen({ route }: any) {
       >
         {activeTab === "AddDueDate" && (
           <AddDueDate
+            task={task}
+            fetchTask={fetchTask}
             closeModal={closeModal}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
