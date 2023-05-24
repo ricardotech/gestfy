@@ -40,6 +40,7 @@ export default function HomeScreen() {
   } = useServices();
 
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -94,6 +95,7 @@ export default function HomeScreen() {
     setRefreshing(true);
     getWorkspaces().then((workspaces) => {
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
+        console.log("members0:");
         getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
           (members) => {
             console.log("members:", members);
@@ -134,11 +136,11 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getWorkspaces().then((workspaces) => {
+      setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        console.log("members0:");
         getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
           (members) => {
-            console.log("members:", members);
+            setMembers(members);
             getTasks(String(activeWorkspace._id)).then((tasks) => {
               setLoading(false);
             });
@@ -175,6 +177,76 @@ export default function HomeScreen() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
+      <FlatList
+        data={listaDatas}
+        ref={calendarRef}
+        contentContainerStyle={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        style={{
+          paddingHorizontal: 20,
+        }}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            onPress={() => {
+              setActiveDate(item);
+              calendarRef.current?.scrollToIndex({
+                index: index,
+                animated: true,
+              });
+            }}
+            key={index}
+            style={{ width: "auto", marginRight: 30 }}
+          >
+            <Text
+              style={{
+                color:
+                  actualDate.day === item.day
+                    ? "#5E8FEE"
+                    : activeDate.day === item.day
+                    ? "#FFF"
+                    : "#999",
+                fontSize: 16,
+                fontWeight: activeDate.day === item.day ? "bold" : "normal",
+              }}
+            >
+              {item.day}
+            </Text>
+            <Text
+              style={{
+                color:
+                  actualDate.day === item.day
+                    ? "#5E8FEE"
+                    : activeDate.day === item.day
+                    ? "#FFF"
+                    : "#999",
+                fontSize: 16,
+                fontWeight: activeDate.day === item.day ? "bold" : "normal",
+              }}
+            >
+              {item.weekDay === "terça-feira"
+                ? "Terça"
+                : item.weekDay === "quarta-feira"
+                ? "Quarta"
+                : item.weekDay === "quinta-feira"
+                ? "Quinta"
+                : item.weekDay === "sexta-feira"
+                ? "Sexta"
+                : item.weekDay === "sábado"
+                ? "Sábado"
+                : item.weekDay === "domingo"
+                ? "Domingo"
+                : item.weekDay === "segunda-feira"
+                ? "Segunda"
+                : item.weekDayAbr}
+            </Text>
+          </TouchableOpacity>
+        )}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      />
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -184,75 +256,6 @@ export default function HomeScreen() {
           />
         }
       >
-        <FlatList
-          data={listaDatas}
-          ref={calendarRef}
-          style={{
-            height: 60,
-            paddingTop: 20,
-            paddingHorizontal: 20,
-            paddingBottom: 10,
-          }}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => {
-                setActiveDate(item);
-                calendarRef.current?.scrollToIndex({
-                  index: index,
-                  animated: true,
-                });
-              }}
-              key={index}
-              style={{ width: "auto", marginRight: 30 }}
-            >
-              <Text
-                style={{
-                  color:
-                    actualDate.day === item.day
-                      ? "#5E8FEE"
-                      : activeDate.day === item.day
-                      ? "#FFF"
-                      : "#999",
-                  fontSize: 16,
-                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
-                }}
-              >
-                {item.day}
-              </Text>
-              <Text
-                style={{
-                  color:
-                    actualDate.day === item.day
-                      ? "#5E8FEE"
-                      : activeDate.day === item.day
-                      ? "#FFF"
-                      : "#999",
-                  fontSize: 16,
-                  fontWeight: activeDate.day === item.day ? "bold" : "normal",
-                }}
-              >
-                {item.weekDay === "terça-feira"
-                  ? "Terça"
-                  : item.weekDay === "quarta-feira"
-                  ? "Quarta"
-                  : item.weekDay === "quinta-feira"
-                  ? "Quinta"
-                  : item.weekDay === "sexta-feira"
-                  ? "Sexta"
-                  : item.weekDay === "sábado"
-                  ? "Sábado"
-                  : item.weekDay === "domingo"
-                  ? "Domingo"
-                  : item.weekDay === "segunda-feira"
-                  ? "Segunda"
-                  : item.weekDayAbr}
-              </Text>
-            </TouchableOpacity>
-          )}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-
         <Widgets taskDisplay={taskDisplay} setTaskDisplay={setTaskDisplay} />
       </ScrollView>
       <BottomTab

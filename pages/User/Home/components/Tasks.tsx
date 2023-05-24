@@ -24,7 +24,7 @@ export default function Tasks({
   const navigation = useNavigation();
 
   return (
-    <View style={{ width: "100%", paddingHorizontal: 20, paddingVertical: 10 }}>
+    <View style={{ width: "100%", paddingHorizontal: 20 }}>
       <View
         style={{
           flexDirection: "row",
@@ -57,7 +57,7 @@ export default function Tasks({
                   }}
                   key={i}
                   style={{
-                    marginTop: 10,
+                    marginBottom: 10,
                     height: 150,
                     width: taskDisplay === "one" ? "100%" : "49%",
                     backgroundColor:
