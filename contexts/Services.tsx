@@ -81,6 +81,9 @@ function ServicesProvider({ children }: ContextProviderProps) {
     year: moment().format("YYYY"),
     weekDayAbr: moment().format("ddd"),
     weekDay: moment().format("dddd"),
+    calendarFormat: `${moment().format("YYYY")}-${moment().format(
+      "MM"
+    )}-${moment().format("DD")}`,
   });
 
   async function loadStoragedData() {

@@ -20,7 +20,6 @@ export default function DueDate({
   task: Task | undefined;
   fetchTask: () => void;
 }) {
-
   const formattedDate = String(task?.dueDate).split("-").reverse().join("-");
   const formattedDueDate = String(dueDate).split("-").reverse().join("-");
 
@@ -69,8 +68,8 @@ export default function DueDate({
         >
           {task?.dueDate
             ? formattedDate
-            : formattedDueDate
-            ? String(dueDate)
+            : dueDate
+            ? formattedDueDate
             : "Adicionar data "}
         </Text>
       </TouchableOpacity>

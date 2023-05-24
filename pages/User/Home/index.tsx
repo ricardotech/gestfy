@@ -76,6 +76,9 @@ export default function HomeScreen() {
         year: dataUltimos14Dias.format("YYYY"),
         weekDayAbr: dataUltimos14Dias.format("ddd"),
         weekDay: dataUltimos14Dias.format("dddd"),
+        calendarFormat: `${dataUltimos14Dias.format(
+          "YYYY"
+        )}-${dataUltimos14Dias.format("MM")}-${dataUltimos14Dias.format("DD")}`,
       };
       listaDatas.push(data);
     }
@@ -88,6 +91,11 @@ export default function HomeScreen() {
         year: dataProximos14Dias.format("YYYY"),
         weekDayAbr: dataProximos14Dias.format("ddd"),
         weekDay: dataProximos14Dias.format("dddd"),
+        calendarFormat: `${dataProximos14Dias.format(
+          "YYYY"
+        )}-${dataProximos14Dias.format("MM")}-${dataProximos14Dias.format(
+          "DD"
+        )}`,
       };
       listaDatas.push(data);
     }
@@ -266,7 +274,9 @@ export default function HomeScreen() {
         }
       >
         <Widgets
-          tasks={tasks}
+          tasks={tasks.filter(
+            (task) => task.dueDate === activeDate.calendarFormat
+          )}
           taskDisplay={taskDisplay}
           setTaskDisplay={setTaskDisplay}
         />

@@ -94,6 +94,7 @@ export type DateObj = {
   year: string;
   weekDayAbr: string;
   weekDay: string;
+  calendarFormat?: string;
 };
 
 export type ContextProviderProps = {
