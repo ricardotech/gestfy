@@ -42,7 +42,7 @@ export default function Header({
       <TouchableOpacity
         onPress={() => {
             // Se edição for confirmada:
-            if (edit == true) {
+            if (edit === true) {
               updateTask(activeTaskId, {dueDate: activeTaskDueDate})
               // alert("Task edited")
             }
