@@ -32,7 +32,7 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL = "https://4596-181-223-249-68.ngrok-free.app";
+const API_URL = "http://localhost:3000";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {

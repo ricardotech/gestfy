@@ -112,7 +112,6 @@ export default function HomeScreen() {
           ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
               (members) => {
                 setMembers(members);
-
                 setLoading(false);
               }
             )
@@ -273,13 +272,15 @@ export default function HomeScreen() {
           />
         }
       >
-        <Widgets
-          tasks={tasks.filter(
-            (task) => task.dueDate === activeDate.calendarFormat
-          )}
-          taskDisplay={taskDisplay}
-          setTaskDisplay={setTaskDisplay}
-        />
+        {tasks && tasks.length > 0 && (
+          <Widgets
+            tasks={tasks.filter(
+              (task) => task.dueDate === activeDate.calendarFormat
+            )}
+            taskDisplay={taskDisplay}
+            setTaskDisplay={setTaskDisplay}
+          />
+        )}
       </ScrollView>
       <BottomTab
         taskDisplay={taskDisplay}
