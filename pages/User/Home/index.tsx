@@ -12,6 +12,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
 
+import navigation, { useFocusEffect } from "@react-navigation/native";
+
 import Popover, {
   PopoverMode,
   PopoverPlacement,
@@ -158,9 +160,11 @@ export default function HomeScreen() {
     handleData();
   }, []);
 
-  useEffect(() => {
-    handleData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      handleData();
+    }, [])
+  );
 
   if (loading) return <Loading />;
 

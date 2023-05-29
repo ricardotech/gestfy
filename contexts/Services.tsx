@@ -97,7 +97,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const addTask = async (task: Task) => {
     await handleApi();
-    console.log(task);
     api.post("/tasks", task).then((res) => {
       setTasks([...tasks, task]);
     });
@@ -118,7 +117,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
       const updatedTask = await api
         .put(`/tasks/${id}`, taskData)
         .then((res) => {
-          console.log(res.data);
           return res;
         });
       const updatedTasks = tasks.map((task) => {
