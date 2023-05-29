@@ -9,6 +9,7 @@ import { Task } from "../../../../utils/types";
 import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
+import { actualDate } from "../../../../utils/date";
 
 export default function Tasks({
   tasks,

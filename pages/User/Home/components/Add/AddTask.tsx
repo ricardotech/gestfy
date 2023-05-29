@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { useServices } from "../../../../../contexts/Services";
 import { Avatar } from "react-native-design-system";
+import { actualDate } from "../../../../../utils/date";
 
 export default function AddTask({
   activeTab,
@@ -52,6 +53,7 @@ export default function AddTask({
             description: name,
             workspaceId: String(activeWorkspace?._id),
             priority: priority ? priority : "High",
+            dueDate: actualDate.calendarFormat,
           });
           closeModal();
         }}

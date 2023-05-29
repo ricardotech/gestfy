@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   View,
@@ -28,13 +28,13 @@ import {
   Workspace as WorkspaceType,
 } from "../../../utils/types";
 import CreateWorkspace from "./components/CreateWorkspace";
+import { actualDate } from "../../../utils/date";
 
 export default function HomeScreen() {
   const {
     user,
     api,
     signOut,
-    actualDate,
     activeDate,
     setActiveDate,
     getWorkspaces,
@@ -91,11 +91,9 @@ export default function HomeScreen() {
         year: dataProximos14Dias.format("YYYY"),
         weekDayAbr: dataProximos14Dias.format("ddd"),
         weekDay: dataProximos14Dias.format("dddd"),
-        calendarFormat: `${dataProximos14Dias.format(
+        calendarFormat: `${dataUltimos14Dias.format(
           "YYYY"
-        )}-${dataProximos14Dias.format("MM")}-${dataProximos14Dias.format(
-          "DD"
-        )}`,
+        )}-${dataUltimos14Dias.format("MM")}-${dataUltimos14Dias.format("DD")}`,
       };
       listaDatas.push(data);
     }
@@ -112,10 +110,11 @@ export default function HomeScreen() {
           ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
               (members) => {
                 setMembers(members);
+                getActiveDateTasks();
                 setLoading(false);
               }
             )
-          : setLoading(false);
+          : getActiveDateTasks() && setLoading(false);
       });
     });
     setRefreshing(false);
@@ -146,6 +145,16 @@ export default function HomeScreen() {
     }
   }
 
+  const [activeDateTasks, setActiveDateTasks] = useState<Task[]>([]);
+
+  const getActiveDateTasks = () => {
+    const tasksFiltered = tasks.filter((task) => {
+      return task.dueDate === activeDate.calendarFormat;
+    });
+    setActiveDateTasks(tasksFiltered);
+    return tasksFiltered;
+  };
+
   useEffect(() => {
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
@@ -154,10 +163,11 @@ export default function HomeScreen() {
           ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
               (members) => {
                 setMembers(members);
+                getActiveDateTasks();
                 setLoading(false);
               }
             )
-          : setLoading(false);
+          : getActiveDateTasks() && setLoading(false);
       });
     });
   }, []);
@@ -201,9 +211,10 @@ export default function HomeScreen() {
           padding: 20,
           height: Platform.OS === "ios" ? 80 : 110,
         }}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, index }: { item: DateObj; index: number }) => (
           <TouchableOpacity
             onPress={() => {
+              getActiveDateTasks();
               setActiveDate(item);
               calendarRef.current?.scrollToIndex({
                 index: index,
@@ -272,11 +283,9 @@ export default function HomeScreen() {
           />
         }
       >
-        {tasks && tasks.length > 0 && (
+        {tasks && (
           <Widgets
-            tasks={tasks.filter(
-              (task) => task.dueDate === activeDate.calendarFormat
-            )}
+            tasks={activeDateTasks}
             taskDisplay={taskDisplay}
             setTaskDisplay={setTaskDisplay}
           />
