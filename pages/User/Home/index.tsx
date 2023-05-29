@@ -168,6 +168,37 @@ export default function HomeScreen() {
     );
   }
 
+  var tasksDueDateActualDate: Task[] = []
+  var tasksDueDateActiveDate: Task[] = []
+  {
+    tasks && tasks.forEach(task => {
+      const activeDateYMD = `${activeDate.year}-${activeDate.month}-${activeDate.day}`
+      const actualDateYMD = `${actualDate.year}-${actualDate.month}-${actualDate.day}`
+
+      // If due date of task, is equal to the pressed date, the task is stored in the array:
+      if (task.dueDate == activeDateYMD) {
+        tasksDueDateActiveDate.push(task);
+      }
+
+      // If dueDate is undefined and 'actualdate' is selected:
+      if (task.dueDate === undefined && activeDateYMD === actualDateYMD) {
+        tasksDueDateActualDate.push(task)
+      }
+    })
+  }
+  const widgetsDueDateActualDate = (
+    < Widgets
+      tasks={tasksDueDateActualDate}
+      taskDisplay={taskDisplay}
+      setTaskDisplay={setTaskDisplay}
+    />)
+  const widgetsDueDateActiveDate = (
+    < Widgets
+      tasks={tasksDueDateActiveDate}
+      taskDisplay={taskDisplay}
+      setTaskDisplay={setTaskDisplay}
+    />)
+
   return (
     <View
       style={{
@@ -265,11 +296,25 @@ export default function HomeScreen() {
           />
         }
       >
-        <Widgets
+        
+        {/* <Widgets
           tasks={tasks}
           taskDisplay={taskDisplay}
           setTaskDisplay={setTaskDisplay}
-        />
+        /> */}
+
+        {(tasks && tasks.length === 0) &&
+        <Text
+          style={{
+            color: '#999999',
+            textAlign: "center"
+          }}>
+            Ainda não existem tarefas
+        </Text>}
+
+        {widgetsDueDateActualDate}
+        {widgetsDueDateActiveDate}
+
       </ScrollView>
       <BottomTab
         taskDisplay={taskDisplay}
