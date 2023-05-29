@@ -127,7 +127,11 @@ function ServicesProvider({ children }: ContextProviderProps) {
         }
         return task;
       });
-      setTasks(updatedTasks);
+      setTasks(
+        updatedTasks.filter(
+          (task) => task.dueDate === activeDate.calendarFormat
+        )
+      );
     } catch (error) {
       console.error(error);
     }
@@ -353,7 +357,9 @@ function ServicesProvider({ children }: ContextProviderProps) {
         signOut,
         isLoading,
         workspaces,
-        tasks,
+        tasks: tasks.filter(
+          (task) => task.dueDate === activeDate.calendarFormat
+        ),
         addTask,
         getTask,
         getTasks,

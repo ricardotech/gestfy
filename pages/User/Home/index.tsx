@@ -101,25 +101,6 @@ export default function HomeScreen() {
     return listaDatas;
   };
 
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    getWorkspaces().then((workspaces) => {
-      setWorkspaces(workspaces);
-      getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        activeWorkspace
-          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
-              (members) => {
-                setMembers(members);
-                getActiveDateTasks();
-                setLoading(false);
-              }
-            )
-          : getActiveDateTasks() && setLoading(false);
-      });
-    });
-    setRefreshing(false);
-  }, []);
-
   const listaDatas = obterListaDatas();
 
   const calendarRef = React.useRef<FlatList>(null);
@@ -155,7 +136,8 @@ export default function HomeScreen() {
     return tasksFiltered;
   };
 
-  useEffect(() => {
+  function handleData() {
+    setRefreshing(true);
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
@@ -163,13 +145,21 @@ export default function HomeScreen() {
           ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
               (members) => {
                 setMembers(members);
-                getActiveDateTasks();
                 setLoading(false);
               }
             )
           : getActiveDateTasks() && setLoading(false);
       });
     });
+    setRefreshing(false);
+  }
+
+  const onRefresh = React.useCallback(async () => {
+    handleData();
+  }, []);
+
+  useEffect(() => {
+    handleData();
   }, []);
 
   if (loading) return <Loading />;
@@ -285,7 +275,7 @@ export default function HomeScreen() {
       >
         {tasks && (
           <Widgets
-            tasks={activeDateTasks}
+            tasks={tasks}
             taskDisplay={taskDisplay}
             setTaskDisplay={setTaskDisplay}
           />
