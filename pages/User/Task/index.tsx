@@ -9,7 +9,7 @@ import { useServices } from "../../../contexts/Services";
 import { Task } from "../../../utils/types";
 import Loading from "../../Loading";
 import Description from "./components/Description";
-import DueDate from "./components/DueDate";
+import DueDate from "./components/DueDate/index";
 import AddDueDate from "./components/DueDate/add";
 import FinishTask from "./components/FinishTask";
 import Header from "./components/Header";
@@ -17,7 +17,7 @@ import Priority from "./components/Priority";
 import Tasks from "./components/Tasks";
 
 export default function TaskScreen({ route }: any) {
-  const id = route.params.id;
+  const id = route.params.id; // Id of task being edited.
 
   const navigation = useNavigation();
   const { getTask, activeWorkspace } = useServices();
@@ -27,7 +27,7 @@ export default function TaskScreen({ route }: any) {
 
   const [edit, setEdit] = useState<boolean>(false);
 
-  const [dueDate, setDueDate] = useState();
+  const [dueDate, setDueDate] = useState<any>();
 
   const [activeTab, setActiveTab] = useState<
     | "AddDueDate"
@@ -65,6 +65,9 @@ export default function TaskScreen({ route }: any) {
     const task = await getTask(id);
     setTask(task);
     setLoading(false);
+
+    const dueDateOfActiveTask = task?.dueDate
+    setDueDate(dueDateOfActiveTask)
   }
 
   useEffect(() => {
@@ -91,7 +94,13 @@ export default function TaskScreen({ route }: any) {
           }}
         >
           <View>
-            <Header edit={edit} setEdit={setEdit} navigation={navigation} />
+            <Header
+              edit={edit}
+              setEdit={setEdit}
+              activeTaskId={id}
+              activeTaskDueDate={dueDate}
+              navigation={navigation}
+            />
             <TextInput
               autoFocus={edit ? true : false}
               editable={edit ? true : false}

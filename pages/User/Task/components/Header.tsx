@@ -1,14 +1,22 @@
 import { Text, TouchableOpacity, View } from "react-native";
 
+import { useServices } from "../../../../contexts/Services";
+
 export default function Header({
   navigation,
   edit,
   setEdit,
+  activeTaskId,
+  activeTaskDueDate
 }: {
   navigation: any;
   edit: boolean;
   setEdit: any;
+  activeTaskId: string;
+  activeTaskDueDate: any;
 }) {
+
+  const { updateTask } = useServices();
   return (
     <View
       style={{
@@ -31,7 +39,15 @@ export default function Header({
           Voltar
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => setEdit(!edit)}>
+      <TouchableOpacity
+        onPress={() => {
+            // Se edição for confirmada:
+            if (edit === true) {
+              updateTask(activeTaskId, {dueDate: activeTaskDueDate})
+              // alert("Task edited")
+            }
+            setEdit(!edit);
+          }}>
         <Text
           style={{
             color: "#3E6FBC",
