@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   View,
@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Modalize } from "react-native-modalize";
+
+import navigation, { useFocusEffect } from "@react-navigation/native";
 
 import Popover, {
   PopoverMode,
@@ -28,13 +30,13 @@ import {
   Workspace as WorkspaceType,
 } from "../../../utils/types";
 import CreateWorkspace from "./components/CreateWorkspace";
+import { actualDate } from "../../../utils/date";
 
 export default function HomeScreen() {
   const {
     user,
     api,
     signOut,
-    actualDate,
     activeDate,
     setActiveDate,
     getWorkspaces,
@@ -76,6 +78,9 @@ export default function HomeScreen() {
         year: dataUltimos14Dias.format("YYYY"),
         weekDayAbr: dataUltimos14Dias.format("ddd"),
         weekDay: dataUltimos14Dias.format("dddd"),
+        calendarFormat: `${dataUltimos14Dias.format(
+          "YYYY"
+        )}-${dataUltimos14Dias.format("MM")}-${dataUltimos14Dias.format("DD")}`,
       };
       listaDatas.push(data);
     }
@@ -88,31 +93,15 @@ export default function HomeScreen() {
         year: dataProximos14Dias.format("YYYY"),
         weekDayAbr: dataProximos14Dias.format("ddd"),
         weekDay: dataProximos14Dias.format("dddd"),
+        calendarFormat: `${dataUltimos14Dias.format(
+          "YYYY"
+        )}-${dataUltimos14Dias.format("MM")}-${dataUltimos14Dias.format("DD")}`,
       };
       listaDatas.push(data);
     }
 
     return listaDatas;
   };
-
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    getWorkspaces().then((workspaces) => {
-      setWorkspaces(workspaces);
-      getActiveWorkspace(workspaces).then((activeWorkspace) => {
-        activeWorkspace
-          ? getActiveWorkspaceMembers(String(activeWorkspace._id)).then(
-              (members) => {
-                setMembers(members);
-
-                setLoading(false);
-              }
-            )
-          : setLoading(false);
-      });
-    });
-    setRefreshing(false);
-  }, []);
 
   const listaDatas = obterListaDatas();
 
@@ -139,7 +128,18 @@ export default function HomeScreen() {
     }
   }
 
-  useEffect(() => {
+  const [activeDateTasks, setActiveDateTasks] = useState<Task[]>([]);
+
+  const getActiveDateTasks = () => {
+    const tasksFiltered = tasks.filter((task) => {
+      return task.dueDate === activeDate.calendarFormat;
+    });
+    setActiveDateTasks(tasksFiltered);
+    return tasksFiltered;
+  };
+
+  function handleData() {
+    setRefreshing(true);
     getWorkspaces().then((workspaces) => {
       setWorkspaces(workspaces);
       getActiveWorkspace(workspaces).then((activeWorkspace) => {
@@ -150,10 +150,21 @@ export default function HomeScreen() {
                 setLoading(false);
               }
             )
-          : setLoading(false);
+          : getActiveDateTasks() && setLoading(false);
       });
     });
+    setRefreshing(false);
+  }
+
+  const onRefresh = React.useCallback(async () => {
+    handleData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      handleData();
+    }, [])
+  );
 
   if (loading) return <Loading />;
 
@@ -194,9 +205,10 @@ export default function HomeScreen() {
           padding: 20,
           height: Platform.OS === "ios" ? 80 : 110,
         }}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, index }: { item: DateObj; index: number }) => (
           <TouchableOpacity
             onPress={() => {
+              getActiveDateTasks();
               setActiveDate(item);
               calendarRef.current?.scrollToIndex({
                 index: index,
@@ -265,11 +277,13 @@ export default function HomeScreen() {
           />
         }
       >
-        <Widgets
-          tasks={tasks}
-          taskDisplay={taskDisplay}
-          setTaskDisplay={setTaskDisplay}
-        />
+        {tasks && (
+          <Widgets
+            tasks={tasks}
+            taskDisplay={taskDisplay}
+            setTaskDisplay={setTaskDisplay}
+          />
+        )}
       </ScrollView>
       <BottomTab
         taskDisplay={taskDisplay}

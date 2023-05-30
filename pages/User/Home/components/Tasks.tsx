@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
 import { HorizontalScroll } from "../../../../components/Listing";
 import { useNavigation } from "@react-navigation/native";
 import { Avatar } from "react-native-design-system";
@@ -9,6 +9,7 @@ import { Task } from "../../../../utils/types";
 import * as Haptics from "expo-haptics";
 
 import { Ionicons } from "@expo/vector-icons";
+import { actualDate } from "../../../../utils/date";
 
 export default function Tasks({
   tasks,
@@ -19,7 +20,7 @@ export default function Tasks({
   taskDisplay: "one" | "two";
   setTaskDisplay: React.Dispatch<React.SetStateAction<"one" | "two">>;
 }) {
-  const { activeWorkspace } = useServices();
+  const { activeWorkspace, activeDate } = useServices();
 
   const [activeTask, setActiveTask] = useState<Task>();
 
@@ -27,8 +28,8 @@ export default function Tasks({
 
   return (
     <View style={{ width: "100%", paddingHorizontal: 20 }}>
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "space-between",
@@ -42,6 +43,7 @@ export default function Tasks({
             if (widget.workspaceId === activeWorkspace?._id)
               return (
                 <Pressable
+                  key={i}
                   onPress={() => {
                     navigation.navigate(
                       "Task" as never,
@@ -57,7 +59,6 @@ export default function Tasks({
                       setActiveTask(undefined);
                     }, 2500);
                   }}
-                  key={i}
                   style={{
                     marginBottom: 10,
                     height: 150,
@@ -92,7 +93,6 @@ export default function Tasks({
                       <View
                         style={{
                           display: "flex",
-                          flexDirection: "row",
                           justifyContent: "space-between",
                           alignItems: "flex-start",
                         }}
@@ -113,7 +113,7 @@ export default function Tasks({
                 </Pressable>
               );
           })}
-      </View>
+      </ScrollView>
     </View>
   );
 }

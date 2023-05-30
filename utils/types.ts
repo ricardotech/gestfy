@@ -63,7 +63,7 @@ export type ContextData = {
   isLoading: boolean;
   token: string;
   api: AxiosInstance;
-  tasks: Task[] | undefined | null;
+  tasks: Task[];
   addTask: (task: Task) => void;
   deleteTask: (taskId: string) => void;
   updateTask: (id: string, taskData: any) => void;
@@ -94,6 +94,7 @@ export type DateObj = {
   year: string;
   weekDayAbr: string;
   weekDay: string;
+  calendarFormat?: string;
 };
 
 export type ContextProviderProps = {

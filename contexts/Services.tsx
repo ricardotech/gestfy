@@ -32,7 +32,7 @@ async function signOut() {
 }
 
 const api = axios.create();
-const API_URL = "https://7fa9-181-223-249-68.ngrok-free.app";
+const API_URL = "http://localhost:3000";
 api.defaults.baseURL = API_URL;
 
 async function handleApi() {
@@ -66,7 +66,6 @@ function ServicesProvider({ children }: ContextProviderProps) {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [activeWorkspace, setActiveWorkspaceState] = useState<Workspace>();
-  const [activeWorkspaceMembers, setActiveWorkspaceMembers] = useState<any[]>();
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const actualDate = {
@@ -82,6 +81,9 @@ function ServicesProvider({ children }: ContextProviderProps) {
     year: moment().format("YYYY"),
     weekDayAbr: moment().format("ddd"),
     weekDay: moment().format("dddd"),
+    calendarFormat: `${moment().format("YYYY")}-${moment().format(
+      "MM"
+    )}-${moment().format("DD")}`,
   });
 
   async function loadStoragedData() {
@@ -112,14 +114,22 @@ function ServicesProvider({ children }: ContextProviderProps) {
     await handleApi();
 
     try {
-      const updatedTask = await api.put(`/tasks/${id}`, taskData);
+      const updatedTask = await api
+        .put(`/tasks/${id}`, taskData)
+        .then((res) => {
+          return res;
+        });
       const updatedTasks = tasks.map((task) => {
         if (task._id === id) {
           return updatedTask.data;
         }
         return task;
       });
-      setTasks(updatedTasks);
+      setTasks(
+        updatedTasks.filter(
+          (task) => task.dueDate === activeDate.calendarFormat
+        )
+      );
     } catch (error) {
       console.error(error);
     }
@@ -345,7 +355,9 @@ function ServicesProvider({ children }: ContextProviderProps) {
         signOut,
         isLoading,
         workspaces,
-        tasks,
+        tasks: tasks.filter(
+          (task) => task.dueDate === activeDate.calendarFormat
+        ),
         addTask,
         getTask,
         getTasks,
